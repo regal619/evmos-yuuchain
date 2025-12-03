@@ -40,6 +40,7 @@ import (
 	testdata_pulsar "github.com/cosmos/cosmos-sdk/testutil/testdata/testpb"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
 
+
 	"cosmossdk.io/log"
 	"cosmossdk.io/math"
 	storetypes "cosmossdk.io/store/types"
@@ -159,6 +160,10 @@ import (
 	"github.com/evmos/evmos/v20/x/ibc/transfer"
 	transferkeeper "github.com/evmos/evmos/v20/x/ibc/transfer/keeper"
 
+        vaultkeeper "github.com/evmos/evmos/v20/x/vault/keeper"
+        vaultmodule "github.com/evmos/evmos/v20/x/vault/module"
+        vaulttypes  "github.com/evmos/evmos/v20/x/vault/types"
+
 	memiavlstore "github.com/crypto-org-chain/cronos/store"
 
 	// Force-load the tracer engines to trigger registration due to Go-Ethereum v1.10.15 changes
@@ -203,6 +208,7 @@ var (
 		inflationtypes.ModuleName:      {authtypes.Minter},
 		erc20types.ModuleName:          {authtypes.Minter, authtypes.Burner},
 		ratelimittypes.ModuleName:      nil,
+                vaulttypes.ModuleName:          {authtypes.Minter},
 	}
 )
 
@@ -263,6 +269,7 @@ type Evmos struct {
 	Erc20Keeper     erc20keeper.Keeper
 	EpochsKeeper    epochskeeper.Keeper
 	VestingKeeper   vestingkeeper.Keeper
+        VaultKeeper     vaultkeeper.Keeper
 
 	// the module manager
 	mm                 *module.Manager
@@ -381,6 +388,14 @@ func NewEvmos(
 		authAddr,
 		logger,
 	)
+        // Yuu vault keeper (uses governance module account as authority)
+        app.VaultKeeper = *vaultkeeper.NewKeeper(
+                runtime.NewKVStoreService(keys[vaulttypes.StoreKey]),
+                appCodec,
+                authcodec.NewBech32Codec(sdk.GetConfig().GetBech32AccountAddrPrefix()),
+                authtypes.NewModuleAddress(govtypes.ModuleName).Bytes(),
+                app.BankKeeper,
+        )
 
 	// optional: enable sign mode textual by overwriting the default tx config (after setting the bank keeper)
 	enabledSignModes := append(authtx.DefaultSignModes, sigtypes.SignMode_SIGN_MODE_TEXTUAL) //nolint:gocritic
@@ -641,7 +656,8 @@ func NewEvmos(
 			app.GetSubspace(erc20types.ModuleName)),
 		epochs.NewAppModule(appCodec, app.EpochsKeeper),
 		vesting.NewAppModule(app.VestingKeeper, app.AccountKeeper, app.BankKeeper, *app.StakingKeeper.Keeper),
-	)
+	        vaultmodule.NewAppModule(appCodec, &app.VaultKeeper),
+)
 
 	// BasicModuleManager defines the module BasicManager which is in charge of setting up basic,
 	// non-dependant module elements, such as codec registration and genesis verification.
@@ -658,6 +674,7 @@ func NewEvmos(
 				},
 			),
 			ibctransfertypes.ModuleName: transfer.AppModuleBasic{AppModuleBasic: &ibctransfer.AppModuleBasic{}},
+                        vaulttypes.ModuleName: vaultmodule.AppModuleBasic{},
 		},
 	)
 	app.BasicModuleManager.RegisterLegacyAminoCodec(cdc)
@@ -729,6 +746,7 @@ func NewEvmos(
 		erc20types.ModuleName,
 		epochstypes.ModuleName,
 		ratelimittypes.ModuleName,
+                vaulttypes.ModuleName,
 	)
 
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
@@ -924,6 +942,45 @@ func (app *Evmos) InitChainer(ctx sdk.Context, req *abci.RequestInitChain) (*abc
 	if err := app.UpgradeKeeper.SetModuleVersionMap(ctx, app.mm.GetVersionMap()); err != nil {
 		panic(err)
 	}
+
+            // --- YUU + USDT denom metadata for wallets / UIs ---
+    // YUU: base "uyuu", display "YUU" (18 decimals)
+    app.BankKeeper.SetDenomMetaData(ctx, banktypes.Metadata{
+        Description: "Yuu native token",
+        Base:        "uyuu",
+        Display:     "YUU",
+        Name:        "Yuu",
+        Symbol:      "YUU",
+        DenomUnits: []*banktypes.DenomUnit{
+            {
+                Denom:    "uyuu",
+                Exponent: 0,
+            },
+            {
+                Denom:    "YUU",
+                Exponent: 18,
+            },
+        },
+    })
+
+    // USDT: base "uusdt", display "USDT" (6 decimals)
+    app.BankKeeper.SetDenomMetaData(ctx, banktypes.Metadata{
+        Description: "Tether USD bridged into the Yuu system",
+        Base:        "uusdt",
+        Display:     "USDT",
+        Name:        "Tether USD",
+        Symbol:      "USDT",
+        DenomUnits: []*banktypes.DenomUnit{
+            {
+                Denom:    "uusdt",
+                Exponent: 0,
+            },
+            {
+                Denom:    "USDT",
+                Exponent: 6,
+            },
+        },
+    })
 
 	return app.mm.InitGenesis(ctx, app.appCodec, genesisState)
 }

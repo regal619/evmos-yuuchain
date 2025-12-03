@@ -1,0 +1,48 @@
+{
+  "chainId": "yuulocal_9001-1",
+  "chainName": "YuuChain Local",
+  "rpc": "http://localhost:26657",
+  "rest": "http://localhost:1317",
+  "stakeCurrency": {
+    "coinDenom": "YUU",
+    "coinMinimalDenom": "uyuu",
+    "coinDecimals": 18
+  },
+  "walletUrlForStaking": "https://wallet.keplr.app",
+  "bip44": {
+    "coinType": 60
+  },
+  "bech32Config": {
+    "bech32PrefixAccAddr": "evmos",
+    "bech32PrefixAccPub": "evmospub",
+    "bech32PrefixValAddr": "evmosvaloper",
+    "bech32PrefixValPub": "evmosvaloperpub",
+    "bech32PrefixConsAddr": "evmosvalcons",
+    "bech32PrefixConsPub": "evmosvalconspub"
+  },
+  "currencies": [
+    {
+      "coinDenom": "YUU",
+      "coinMinimalDenom": "uyuu",
+      "coinDecimals": 18
+    },
+    {
+      "coinDenom": "USDT",
+      "coinMinimalDenom": "uusdt",
+      "coinDecimals": 6
+    }
+  ],
+  "feeCurrencies": [
+    {
+      "coinDenom": "YUU",
+      "coinMinimalDenom": "uyuu",
+      "coinDecimals": 18,
+      "gasPriceStep": {
+        "low": 0.005,
+        "average": 0.005,
+        "high": 0.005
+      }
+    }
+  ],
+  "features": ["eth-address-gen", "eth-key-sign"]
+}

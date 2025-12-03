@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>YuuChain + Keplr Local Helper</title>
+  </head>
+  <body>
+    <h1>YuuChain + Keplr Local Helper</h1>
+    <button id="add-yuuchain">Add YuuChain Local to Keplr</button>
+
+    <pre id="log"></pre>
+
+    <script>
+      // This matches your yuuchain.json file.
+      const yuuchainConfig = {
+        chainId: "yuulocal_9001-1",
+        chainName: "YuuChain Local",
+        rpc: "http://localhost:26657",
+        rest: "http://localhost:1317",
+        stakeCurrency: {
+          coinDenom: "YUU",
+          coinMinimalDenom: "uyuu",
+          coinDecimals: 18,
+        },
+        walletUrlForStaking: "https://wallet.keplr.app",
+        bip44: {
+          coinType: 60,
+        },
+        bech32Config: {
+          bech32PrefixAccAddr: "evmos",
+          bech32PrefixAccPub: "evmospub",
+          bech32PrefixValAddr: "evmosvaloper",
+          bech32PrefixValPub: "evmosvaloperpub",
+          bech32PrefixConsAddr: "evmosvalcons",
+          bech32PrefixConsPub: "evmosvalconspub",
+        },
+        currencies: [
+          {
+            coinDenom: "YUU",
+            coinMinimalDenom: "uyuu",
+            coinDecimals: 18,
+          },
+        ],
+        feeCurrencies: [
+          {
+            coinDenom: "YUU",
+            coinMinimalDenom: "uyuu",
+            coinDecimals: 18,
+            gasPriceStep: {
+              low: 7,
+              average: 7,
+              high: 7,
+            },
+          },
+        ],
+        features: ["eth-address-gen", "eth-key-sign"],
+      };
+
+      function log(msg) {
+        const pre = document.getElementById("log");
+        pre.textContent += msg + "\n";
+      }
+
+      async function suggestChain() {
+        if (!window.keplr) {
+          log("Keplr extension not found in this browser.");
+          alert("Install Keplr extension first, then reload this page.");
+          return;
+        }
+
+        try {
+          await window.keplr.experimentalSuggestChain(yuuchainConfig);
+          log("Successfully suggested YuuChain Local to Keplr.");
+          alert("YuuChain Local should now appear in Keplr.");
+        } catch (e) {
+          console.error(e);
+          log("Error suggesting chain: " + (e.message || e));
+        }
+      }
+
+      document
+        .getElementById("add-yuuchain")
+        .addEventListener("click", suggestChain);
+    </script>
+  </body>
+</html>
