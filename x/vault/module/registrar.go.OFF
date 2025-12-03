@@ -1,0 +1,15 @@
+package module
+
+import (
+    appconfig "cosmossdk.io/depinject/appconfig"
+
+    vaultmodulev1 "yuuchain/x/vault/module/v1"
+)
+
+// single, authoritative registration for the vault module
+func init() {
+    appconfig.RegisterModule(
+        &vaultmodulev1.Module{},
+        appconfig.Provide(ProvideModule),
+    )
+}

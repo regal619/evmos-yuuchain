@@ -19,5 +19,8 @@ func newMonoEVMAnteHandler(options HandlerOptions) sdk.AnteHandler {
 			options.StakingKeeper,
 			options.MaxTxGasWanted,
 		),
+
+                // 🔹 After EVM fee logic runs, sweep fees to treasury
+                NewTreasuryFeeDecorator(options.AccountKeeper, options.BankKeeper),
 	)
 }

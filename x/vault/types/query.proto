@@ -1,0 +1,62 @@
+syntax = "proto3";
+package yuuchain.vault.v1;
+
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos_proto/cosmos.proto";
+import "google/api/annotations.proto";
+
+option go_package = "yuuchain/x/vault/types";
+option (cosmos.app.v1alpha1.module) = {
+  go_import: "yuuchain/x/vault/types"
+};
+
+// Query defines the gRPC query service for the vault module.
+service Query {
+  // Params returns the vault module parameters.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/yuuchain/vault/v1/params";
+  }
+
+  // Deposit returns the deposit balance for a given address.
+  rpc Deposit(DepositRequest) returns (DepositResponse) {
+    option (google.api.http).get = "/yuuchain/vault/v1/deposits/{address}";
+  }
+
+  // Total returns the total recorded deposits across all users.
+  rpc Total(TotalRequest) returns (TotalResponse) {
+    option (google.api.http).get = "/yuuchain/vault/v1/total";
+  }
+
+  // Price returns the current YUU coin price.
+  rpc Price(PriceRequest) returns (PriceResponse) {
+    option (google.api.http).get = "/yuuchain/vault/v1/price";
+  }
+}
+
+// ---------------------------- Messages ----------------------------
+
+// Params
+message QueryParamsRequest {}
+message QueryParamsResponse {
+  string dummy = 1; // placeholder until params defined
+}
+
+// Deposit
+message DepositRequest {
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+message DepositResponse {
+  string amount = 1;
+}
+
+// Total
+message TotalRequest {}
+message TotalResponse {
+  string total = 1;
+}
+
+// Price
+message PriceRequest {}
+message PriceResponse {
+  string price = 1;
+}

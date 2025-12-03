@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Add YuuChain to Keplr</title>
+  </head>
+  <body>
+    <h1>Add YuuChain to Keplr</h1>
+    <button id="add-chain">Add YuuChain</button>
+
+    <script>
+      // This is exactly your yuuchain.json, in JS form:
+      const yuuchainConfig = {
+        chainId: "yuulocal_9001-1",
+        chainName: "YuuChain Local",
+        rpc: "http://localhost:26657",
+        rest: "http://localhost:1317",
+        stakeCurrency: {
+          coinDenom: "YUU",
+          coinMinimalDenom: "uyuu",
+          coinDecimals: 18,
+        },
+        walletUrlForStaking: "https://wallet.keplr.app",
+        bip44: {
+          coinType: 60,
+        },
+        bech32Config: {
+          bech32PrefixAccAddr: "evmos",
+          bech32PrefixAccPub: "evmospub",
+          bech32PrefixValAddr: "evmosvaloper",
+          bech32PrefixValPub: "evmosvaloperpub",
+          bech32PrefixConsAddr: "evmosvalcons",
+          bech32PrefixConsPub: "evmosvalconspub",
+        },
+        currencies: [
+          {
+            coinDenom: "YUU",
+            coinMinimalDenom: "uyuu",
+            coinDecimals: 18,
+          },
+          {
+            coinDenom: "USDT",
+            coinMinimalDenom: "uusdt",
+            coinDecimals: 6,
+          },
+        ],
+        feeCurrencies: [
+          {
+            coinDenom: "YUU",
+            coinMinimalDenom: "uyuu",
+            coinDecimals: 18,
+            gasPriceStep: {
+              low: 0.005,
+              average: 0.005,
+              high: 0.005,
+            },
+          },
+        ],
+        features: ["eth-address-gen", "eth-key-sign"],
+      };
+
+      async function addYuuChainToKeplr() {
+        if (!window.keplr) {
+          alert("Keplr extension not found. Please install Keplr in your browser.");
+          return;
+        }
+
+        try {
+          await window.keplr.experimentalSuggestChain(yuuchainConfig);
+          alert("YuuChain was suggested to Keplr. Open Keplr and select it.");
+        } catch (err) {
+          console.error(err);
+          alert("Failed to suggest chain to Keplr. Check the console for details.");
+        }
+      }
+
+      document
+        .getElementById("add-chain")
+        .addEventListener("click", addYuuChainToKeplr);
+    </script>
+  </body>
+</html>

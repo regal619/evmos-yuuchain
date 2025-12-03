@@ -28,6 +28,7 @@ import (
 	feemarkettypes "github.com/evmos/evmos/v20/x/feemarket/types"
 	inflationtypes "github.com/evmos/evmos/v20/x/inflation/v1/types"
 	vestingtypes "github.com/evmos/evmos/v20/x/vesting/types"
+        vaulttypes "github.com/evmos/evmos/v20/x/vault/types"
 )
 
 // StoreKeys returns the application store keys,
@@ -62,6 +63,6 @@ func StoreKeys() (
 	// Add the EVM transient store key
 	tkeys := storetypes.NewTransientStoreKeys(paramstypes.TStoreKey, evmtypes.TransientKey, feemarkettypes.TransientKey)
 	memKeys := storetypes.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
-
+        keys[vaulttypes.StoreKey] = storetypes.NewKVStoreKey(vaulttypes.StoreKey)
 	return keys, memKeys, tkeys
 }

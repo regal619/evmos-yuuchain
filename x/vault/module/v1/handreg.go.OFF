@@ -1,0 +1,15 @@
+package v1
+
+import (
+    appconfig "cosmossdk.io/depinject/appconfig"
+
+    vaultmodule "yuuchain/x/vault/module"
+)
+
+// Register the vault module config type AND tell depinject which provider builds it.
+func init() {
+    appconfig.RegisterModule(
+        &Module{},
+        appconfig.Provide(vaultmodule.ProvideModule),
+    )
+}
