@@ -85,3 +85,9 @@ dependency-graph.png
 contracts/@openzeppelin/*
 
 dist/
+.venv/
+.bak.
+*.save
+keplr-support/_backup/
+.bak.
+.bak.

@@ -22,3 +22,8 @@ var (
 	// Params key (future use)
 	ParamsKey = collections.NewPrefix(0)
 )
+var (
+    // Bridge operator (single address) & idempotency keys
+    BridgeOperatorKey  = []byte("bridge_operator")
+    SeenBridgeTxPrefix = []byte("seen_bridge_tx:")
+)
