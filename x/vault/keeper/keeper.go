@@ -6,6 +6,7 @@ import (
         "fmt"
 	"math"
 	"math/big"
+        "strings"
 
 	errorsmod "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
@@ -134,6 +135,38 @@ func (k Keeper) GetAuthority() string {
 	s, _ := k.addressCodec.BytesToString(k.authority)
 	return s
 }
+// --- Bridge operator allow-list (single address) ---
+    // Stored as raw AccAddress bytes under BridgeOperatorKey.
+    func (k Keeper) GetBridgeOperator(ctx sdk.Context) sdk.AccAddress {
+        kv := k.storeService.OpenKVStore(ctx)
+        bz, _ := kv.Get(vaulttypes.BridgeOperatorKey)
+        if len(bz) == 0 {
+            return nil
+        }
+        return sdk.AccAddress(bz)
+    }
+
+    func (k Keeper) SetBridgeOperator(ctx sdk.Context, addr sdk.AccAddress) {
+        kv := k.storeService.OpenKVStore(ctx)
+        _ = kv.Set(vaulttypes.BridgeOperatorKey, addr)
+    }
+
+    // --- Idempotency on (source_network, source_tx_hash) ---
+    func (k Keeper) seenBridgeTxKey(network, txhash string) []byte {
+        key := fmt.Sprintf("%s%s|%s", string(vaulttypes.SeenBridgeTxPrefix), strings.ToLower(network), strings.ToLower(txhash))
+        return []byte(key)
+    }
+
+    func (k Keeper) IsSeenBridgeTx(ctx sdk.Context, network, txhash string) bool {
+        kv := k.storeService.OpenKVStore(ctx)
+        bz, _ := kv.Get(k.seenBridgeTxKey(network, txhash))
+        return bz != nil
+    }
+
+    func (k Keeper) MarkSeenBridgeTx(ctx sdk.Context, network, txhash string) {
+        kv := k.storeService.OpenKVStore(ctx)
+        _ = kv.Set(k.seenBridgeTxKey(network, txhash), []byte{1})
+    }
 
       // GetYuuPrice returns the bonding-curve price of 1 YUU, but we store
      // deposits on-chain in uusdt, so we must convert to USDT (÷ 1e6) before

@@ -4,6 +4,7 @@ import (
     "context"
     "errors"
     "fmt"
+    "strings"
 
     sdk "github.com/cosmos/cosmos-sdk/types"
     sdkmath "cosmossdk.io/math"
@@ -106,6 +107,18 @@ func (m msgServer) MintFromBridge(
     if msg == nil {
         return nil, fmt.Errorf("nil message")
     }
+// (A) Bridge operator allow-list (bootstrap on first successful call)
+    creatorAddr, err := sdk.AccAddressFromBech32(msg.Creator)
+    if err != nil {
+        return nil, fmt.Errorf("invalid creator: %w", err)
+    }
+    if op := m.Keeper.GetBridgeOperator(ctx); op == nil {
+        // First successful caller becomes the bridge operator.
+        m.Keeper.SetBridgeOperator(ctx, creatorAddr)
+    } else if !creatorAddr.Equals(op) {
+        return nil, fmt.Errorf("only bridge operator can mint")
+    }
+
 
     // Parse recipient
     recipient, err := sdk.AccAddressFromBech32(msg.Recipient)
@@ -128,6 +141,30 @@ func (m msgServer) MintFromBridge(
         return nil, fmt.Errorf("amount must be positive")
     }
 
+// (B) Optional network allow-list (OFF by default)
+    const enforceAllowedNetworks = false
+    var allowedNetworks = map[string]struct{}{
+        "ethereum": {},
+        "sepolia":  {},
+    }
+    if enforceAllowedNetworks {
+        if _, ok := allowedNetworks[strings.ToLower(msg.SourceNetwork)]; !ok {
+            return nil, fmt.Errorf("unrecognized source network: %s", msg.SourceNetwork)
+        }
+    }
+
+    // (C) Optional minimum amount (OFF by default)
+    // Set to sdkmath.NewInt(1_000_000_000_000_000) to require >= 0.001 YUU.
+    minAmt := sdkmath.ZeroInt()
+    if coin.Amount.LT(minAmt) {
+        return nil, fmt.Errorf("amount below minimum: %s < %s", coin.Amount.String(), minAmt.String())
+    }
+
+    // (D) Idempotency on (source_network, source_tx_hash)
+    if m.Keeper.IsSeenBridgeTx(ctx, msg.SourceNetwork, msg.SourceTxHash) {
+        return nil, fmt.Errorf("bridge tx already processed: %s/%s", msg.SourceNetwork, msg.SourceTxHash)
+    }
+
     // Mint to module, then send to recipient
     if err := m.Keeper.bankKeeper.MintCoins(ctx, vaulttypes.ModuleName, sdk.NewCoins(coin)); err != nil {
         return nil, err
@@ -147,5 +184,6 @@ func (m msgServer) MintFromBridge(
         ),
     )
 
+    m.Keeper.MarkSeenBridgeTx(ctx, msg.SourceNetwork, msg.SourceTxHash)
     return &vaulttypes.MsgMintFromBridgeResponse{}, nil
 }

@@ -1,0 +1,23 @@
+{
+  "yuuchain": {
+    "chain_id": "yuuchain_9001-1",
+    "rpc": "http://localhost:26657"
+  },
+  "sources": [
+    {
+      "name": "sepolia",
+      "evm_chain_id": 11155111,
+      "rpc": "https://YOUR_SEPOLIA_RPC",
+      "token": {
+        "symbol": "USDT",
+        "address": "0x71cC5049C84485803C27Cd5ad4b0f07B513D4E49",
+        "decimals": 6
+      },
+      "escrow": {
+        "address": "0xD544C48fcad50dE83A5665079388D00c17eBeba3",
+        "kind": "ERC20"
+      },
+      "min_confirmations": 3
+    }
+  ]
+}
