@@ -91,3 +91,6 @@ dist/
 keplr-support/_backup/
 .bak.
 .bak.
+
+evmosd
+/build/evmosd
