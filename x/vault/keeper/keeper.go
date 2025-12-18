@@ -151,6 +151,18 @@ func (k Keeper) GetAuthority() string {
         _ = kv.Set(vaulttypes.BridgeOperatorKey, addr)
     }
 
+
+    // BridgeOperator is a read-only gRPC query that returns the currently authorized bridge operator.
+    // This exposes the same authority enforced by MsgMintFromBridge.
+    func (k Keeper) BridgeOperator(ctx context.Context, _ *vaulttypes.QueryBridgeOperatorRequest) (*vaulttypes.QueryBridgeOperatorResponse, error) {
+        sdkCtx := sdk.UnwrapSDKContext(ctx)
+        op := k.GetBridgeOperator(sdkCtx)
+        if op == nil {
+            return &vaulttypes.QueryBridgeOperatorResponse{Operator: ""}, nil
+        }
+        return &vaulttypes.QueryBridgeOperatorResponse{Operator: op.String()}, nil
+    }
+
     // --- Idempotency on (source_network, source_tx_hash) ---
     func (k Keeper) seenBridgeTxKey(network, txhash string) []byte {
         key := fmt.Sprintf("%s%s|%s", string(vaulttypes.SeenBridgeTxPrefix), strings.ToLower(network), strings.ToLower(txhash))

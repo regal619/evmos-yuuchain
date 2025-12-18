@@ -61,7 +61,7 @@ func CmdMintFromBridge() *cobra.Command {
 
 	cmd.Flags().String(FlagRecipient, "", "YuuChain recipient bech32 address")
 	cmd.Flags().String(FlagAmountUyuu, "", "Amount to mint in uyuu (1e18 precision)")
-	cmd.Flags().String(FlagSourceNetwork, "", Source network ID (e.g. "sepolia"))
+        cmd.Flags().String(FlagSourceNetwork, "", "Source network ID (e.g. \"sepolia\")")
 	cmd.Flags().String(FlagSourceTxHash, "", "Source chain transaction hash")
 	cmd.Flags().String(FlagSourceMetadata, "", "Optional JSON metadata (inline)")
 	cmd.Flags().String(FlagSourceMetadataFile, "", "Optional path to JSON metadata file")
