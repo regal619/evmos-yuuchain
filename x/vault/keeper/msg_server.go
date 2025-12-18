@@ -107,18 +107,27 @@ func (m msgServer) MintFromBridge(
     if msg == nil {
         return nil, fmt.Errorf("nil message")
     }
-// (A) Bridge operator allow-list (bootstrap on first successful call)
-    creatorAddr, err := sdk.AccAddressFromBech32(msg.Creator)
-    if err != nil {
-        return nil, fmt.Errorf("invalid creator: %w", err)
-    }
-    if op := m.Keeper.GetBridgeOperator(ctx); op == nil {
-        // First successful caller becomes the bridge operator.
-        m.Keeper.SetBridgeOperator(ctx, creatorAddr)
-    } else if !creatorAddr.Equals(op) {
-        return nil, fmt.Errorf("only bridge operator can mint")
-    }
+    // (A) Bridge operator allow-list (PRODUCTION LOCK)
+      creatorAddr, err := sdk.AccAddressFromBech32(msg.Creator)
+      if err != nil {
+          return nil, fmt.Errorf("invalid creator: %w", err)
+      }
 
+      const bridgeOperatorBech32 = "evmos1xgeppskksl5g6fnvzlnaun4xnql8f8gdr5dsz7"
+
+      op := m.Keeper.GetBridgeOperator(ctx)
+      if op == nil {
+          fixedOp, err := sdk.AccAddressFromBech32(bridgeOperatorBech32)
+          if err != nil {
+              return nil, fmt.Errorf("invalid fixed bridge operator address: %w", err)
+          }
+          m.Keeper.SetBridgeOperator(ctx, fixedOp)
+          op = fixedOp
+      }
+
+      if !creatorAddr.Equals(op) {
+          return nil, fmt.Errorf("only bridge operator can mint")
+      }
 
     // Parse recipient
     recipient, err := sdk.AccAddressFromBech32(msg.Recipient)

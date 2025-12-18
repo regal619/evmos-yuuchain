@@ -12,6 +12,9 @@ import (
     sdk "github.com/cosmos/cosmos-sdk/types"
     "github.com/cosmos/cosmos-sdk/types/module"
 
+    "github.com/spf13/cobra"
+    "github.com/evmos/evmos/v20/x/vault/client/cli"
+
     appmodule "cosmossdk.io/core/appmodule"
 
     vaultkeeper "github.com/evmos/evmos/v20/x/vault/keeper"
@@ -79,8 +82,9 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(
 // We’re not wiring CLI here (tx/query commands) – they can be added later.
 // This keeps compilation simple and avoids vaultcli.NewTxCmd errors.
 // func (AppModuleBasic) GetTxCmd() *cobra.Command    { return nil }
-// func (AppModuleBasic) GetQueryCmd() *cobra.Command { return nil }
-
+func (AppModuleBasic) GetQueryCmd() *cobra.Command {
+	return cli.GetQueryCmd()
+}
 // -----------------------------------------------------------------------------
 // AppModule
 // -----------------------------------------------------------------------------

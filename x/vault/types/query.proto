@@ -31,6 +31,11 @@ service Query {
   rpc Price(PriceRequest) returns (PriceResponse) {
     option (google.api.http).get = "/yuuchain/vault/v1/price";
   }
+
+  // BridgeOperator returns the currently authorized bridge operator address.
+  rpc BridgeOperator(QueryBridgeOperatorRequest) returns (QueryBridgeOperatorResponse) {
+    option (google.api.http).get = "/yuuchain/vault/v1/bridge_operator";
+  }
 }
 
 // ---------------------------- Messages ----------------------------
@@ -39,6 +44,11 @@ service Query {
 message QueryParamsRequest {}
 message QueryParamsResponse {
   string dummy = 1; // placeholder until params defined
+}
+
+message QueryBridgeOperatorRequest {}
+message QueryBridgeOperatorResponse {
+  string operator = 1;
 }
 
 // Deposit

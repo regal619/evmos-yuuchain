@@ -89,6 +89,18 @@ def once(cfg, tx, recipient):
         "type": "event"
     }]
 
+      # Standard ERC20 Transfer event
+    abi_erc20_transfer = [{
+    "anonymous": False,
+    "inputs": [
+      {"indexed": True,  "internalType": "address", "name": "from", "type": "address"},
+      {"indexed": True,  "internalType": "address", "name": "to",   "type": "address"},
+      {"indexed": False, "internalType": "uint256", "name": "value","type": "uint256"}
+    ],
+    "name": "Transfer",
+    "type": "event"
+  }]
+
     # fetch receipt
     rcpt = w3.eth.get_transaction_receipt(tx)
 
@@ -109,7 +121,7 @@ def once(cfg, tx, recipient):
     except Exception:
         pass
 
-    # fallback to ETH simple vault
+# fallback to ETH simple vault
     if not found:
         try:
             evt2 = w3.eth.contract(address=escrow, abi=abi_deposited_eth).events.Deposited()
@@ -117,7 +129,7 @@ def once(cfg, tx, recipient):
                 if log["address"].lower() == escrow.lower():
                     try:
                         dec_ev = evt2.process_log(log)
-                        found  = dec_ev["args"]
+                        found = dec_ev["args"]
                         meta["kind"] = "ETH"
                         break
                     except Exception:
@@ -125,9 +137,28 @@ def once(cfg, tx, recipient):
         except Exception:
             pass
 
+    # Fallback: detect direct ERC20 Transfer(to=escrow) in this tx
     if not found:
-        print("❌ No Deposited event from escrow in that tx."); return 2
+        try:
+            token_addr = Web3.to_checksum_address(src["token"]["address"])
+            transfer_evt = w3.eth.contract(address=token_addr, abi=abi_erc20_transfer).events.Transfer()
+            for log in rcpt.logs:
+                if log["address"].lower() == token_addr.lower():
+                    try:
+                        dec_ev = transfer_evt.process_log(log)
+                        args = dec_ev["args"]
+                        if args["to"].lower() == escrow.lower():
+                            found = {"units": int(args["value"]), "depositor": args["from"]}
+                            meta["kind"] = "ERC20_TRANSFER"
+                            break
+                    except Exception:
+                        pass
+        except Exception:
+            pass
 
+    if not found:
+        print("❌ No Deposited event OR ERC20 Transfer(to=escrow) found in that tx.")
+        return 2
     # compute uyuu to mint
     if "units" in found:
         units = int(found["units"])          # USDT units
@@ -153,8 +184,8 @@ def once(cfg, tx, recipient):
         "./build/evmosd","tx","vault","mint-from-bridge",
         "--chain-id", cfg["yuuchain"]["chain_id"],
         "--home", os.path.expanduser("~/.evmosd"),
-        "--keyring-backend","test",
-        "--from","regal",                      # change if your signer is different
+        "--keyring-backend","os",
+        "--from","bridge-operator",                      # change if your signer is different
         "--recipient", recipient,
         "--amount-uyuu", str(uyuu),
         "--source-network","sepolia",
@@ -276,8 +307,8 @@ def watch(cfg, recipient, confirmations=3, poll_sec=10):
                     "./build/evmosd","tx","vault","mint-from-bridge",
                     "--chain-id", cfg["yuuchain"]["chain_id"],
                     "--home", os.path.expanduser("~/.evmosd"),
-                    "--keyring-backend","test",
-                    "--from","regal",
+                    "--keyring-backend","os",
+                    "--from","bridge-operator",
                     "--recipient", recipient,
                     "--amount-uyuu", str(uyuu),
                     "--source-network","sepolia",
@@ -317,7 +348,7 @@ def cli_main():
         recipient = sys.argv[3]
         sys.exit(once(cfg, tx, recipient))
     else:
-        print("Usage:\n  yuu_bridge_watcher.py --check\n  yuu_bridge_watcher.py mint-once <sepolia_tx_hash> <recipient_evmos>")
+        print("Usage:\n  yuu_bridge_watcher.py --check\n  yuu_bridge_watcher.py watch <recipient_evmos>\n  yuu_bridge_watcher.py mint-once <sepolia_tx_hash> <recipient_evmos>")
         sys.exit(2)
 
 if __name__ == "__main__":
