@@ -6,9 +6,8 @@ package types
 import (
 	context "context"
 	fmt "fmt"
+	_ "github.com/cosmos/cosmos-proto"
 	_ "github.com/cosmos/cosmos-sdk/types/query"
-	_ "github.com/cosmos/cosmos-sdk/types/tx/amino"
-	_ "github.com/cosmos/gogoproto/gogoproto"
 	grpc1 "github.com/cosmos/gogoproto/grpc"
 	proto "github.com/cosmos/gogoproto/proto"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
@@ -31,6 +30,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// Params
 type QueryParamsRequest struct {
 }
 
@@ -68,8 +68,7 @@ func (m *QueryParamsRequest) XXX_DiscardUnknown() {
 var xxx_messageInfo_QueryParamsRequest proto.InternalMessageInfo
 
 type QueryParamsResponse struct {
-	// params holds all the parameters of this module.
-	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
+	Dummy string `protobuf:"bytes,1,opt,name=dummy,proto3" json:"dummy,omitempty"`
 }
 
 func (m *QueryParamsResponse) Reset()         { *m = QueryParamsResponse{} }
@@ -105,13 +104,95 @@ func (m *QueryParamsResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryParamsResponse proto.InternalMessageInfo
 
-func (m *QueryParamsResponse) GetParams() Params {
+func (m *QueryParamsResponse) GetDummy() string {
 	if m != nil {
-		return m.Params
+		return m.Dummy
 	}
-	return Params{}
+	return ""
 }
 
+// Bridge Operator
+type QueryBridgeOperatorRequest struct {
+}
+
+func (m *QueryBridgeOperatorRequest) Reset()         { *m = QueryBridgeOperatorRequest{} }
+func (m *QueryBridgeOperatorRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryBridgeOperatorRequest) ProtoMessage()    {}
+func (*QueryBridgeOperatorRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_009f3c78ef6658ec, []int{2}
+}
+func (m *QueryBridgeOperatorRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryBridgeOperatorRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryBridgeOperatorRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryBridgeOperatorRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBridgeOperatorRequest.Merge(m, src)
+}
+func (m *QueryBridgeOperatorRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryBridgeOperatorRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBridgeOperatorRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryBridgeOperatorRequest proto.InternalMessageInfo
+
+type QueryBridgeOperatorResponse struct {
+	Operator string `protobuf:"bytes,1,opt,name=operator,proto3" json:"operator,omitempty"`
+}
+
+func (m *QueryBridgeOperatorResponse) Reset()         { *m = QueryBridgeOperatorResponse{} }
+func (m *QueryBridgeOperatorResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryBridgeOperatorResponse) ProtoMessage()    {}
+func (*QueryBridgeOperatorResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_009f3c78ef6658ec, []int{3}
+}
+func (m *QueryBridgeOperatorResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryBridgeOperatorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryBridgeOperatorResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryBridgeOperatorResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBridgeOperatorResponse.Merge(m, src)
+}
+func (m *QueryBridgeOperatorResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryBridgeOperatorResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBridgeOperatorResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryBridgeOperatorResponse proto.InternalMessageInfo
+
+func (m *QueryBridgeOperatorResponse) GetOperator() string {
+	if m != nil {
+		return m.Operator
+	}
+	return ""
+}
+
+// Deposit
 type DepositRequest struct {
 	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 }
@@ -120,7 +201,7 @@ func (m *DepositRequest) Reset()         { *m = DepositRequest{} }
 func (m *DepositRequest) String() string { return proto.CompactTextString(m) }
 func (*DepositRequest) ProtoMessage()    {}
 func (*DepositRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_009f3c78ef6658ec, []int{2}
+	return fileDescriptor_009f3c78ef6658ec, []int{4}
 }
 func (m *DepositRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -164,7 +245,7 @@ func (m *DepositResponse) Reset()         { *m = DepositResponse{} }
 func (m *DepositResponse) String() string { return proto.CompactTextString(m) }
 func (*DepositResponse) ProtoMessage()    {}
 func (*DepositResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_009f3c78ef6658ec, []int{3}
+	return fileDescriptor_009f3c78ef6658ec, []int{5}
 }
 func (m *DepositResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -200,6 +281,7 @@ func (m *DepositResponse) GetAmount() string {
 	return ""
 }
 
+// Total
 type TotalRequest struct {
 }
 
@@ -207,7 +289,7 @@ func (m *TotalRequest) Reset()         { *m = TotalRequest{} }
 func (m *TotalRequest) String() string { return proto.CompactTextString(m) }
 func (*TotalRequest) ProtoMessage()    {}
 func (*TotalRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_009f3c78ef6658ec, []int{4}
+	return fileDescriptor_009f3c78ef6658ec, []int{6}
 }
 func (m *TotalRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -244,7 +326,7 @@ func (m *TotalResponse) Reset()         { *m = TotalResponse{} }
 func (m *TotalResponse) String() string { return proto.CompactTextString(m) }
 func (*TotalResponse) ProtoMessage()    {}
 func (*TotalResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_009f3c78ef6658ec, []int{5}
+	return fileDescriptor_009f3c78ef6658ec, []int{7}
 }
 func (m *TotalResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -280,6 +362,7 @@ func (m *TotalResponse) GetTotal() string {
 	return ""
 }
 
+// Price
 type PriceRequest struct {
 }
 
@@ -287,7 +370,7 @@ func (m *PriceRequest) Reset()         { *m = PriceRequest{} }
 func (m *PriceRequest) String() string { return proto.CompactTextString(m) }
 func (*PriceRequest) ProtoMessage()    {}
 func (*PriceRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_009f3c78ef6658ec, []int{6}
+	return fileDescriptor_009f3c78ef6658ec, []int{8}
 }
 func (m *PriceRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -324,7 +407,7 @@ func (m *PriceResponse) Reset()         { *m = PriceResponse{} }
 func (m *PriceResponse) String() string { return proto.CompactTextString(m) }
 func (*PriceResponse) ProtoMessage()    {}
 func (*PriceResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_009f3c78ef6658ec, []int{7}
+	return fileDescriptor_009f3c78ef6658ec, []int{9}
 }
 func (m *PriceResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -363,6 +446,8 @@ func (m *PriceResponse) GetPrice() string {
 func init() {
 	proto.RegisterType((*QueryParamsRequest)(nil), "yuuchain.vault.v1.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "yuuchain.vault.v1.QueryParamsResponse")
+	proto.RegisterType((*QueryBridgeOperatorRequest)(nil), "yuuchain.vault.v1.QueryBridgeOperatorRequest")
+	proto.RegisterType((*QueryBridgeOperatorResponse)(nil), "yuuchain.vault.v1.QueryBridgeOperatorResponse")
 	proto.RegisterType((*DepositRequest)(nil), "yuuchain.vault.v1.DepositRequest")
 	proto.RegisterType((*DepositResponse)(nil), "yuuchain.vault.v1.DepositResponse")
 	proto.RegisterType((*TotalRequest)(nil), "yuuchain.vault.v1.TotalRequest")
@@ -374,37 +459,41 @@ func init() {
 func init() { proto.RegisterFile("yuuchain/vault/v1/query.proto", fileDescriptor_009f3c78ef6658ec) }
 
 var fileDescriptor_009f3c78ef6658ec = []byte{
-	// 474 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x93, 0xc1, 0x6e, 0xd3, 0x30,
-	0x18, 0xc7, 0x13, 0x50, 0x33, 0xcd, 0xc0, 0xd0, 0x4c, 0x35, 0x75, 0x01, 0xb2, 0x2e, 0x62, 0x13,
-	0x54, 0x28, 0x26, 0xe3, 0xca, 0x69, 0xe2, 0x01, 0x46, 0xe1, 0xc4, 0xcd, 0x6d, 0xad, 0x10, 0x29,
-	0xb1, 0xbd, 0xd8, 0x89, 0x28, 0x08, 0x0e, 0x3c, 0x01, 0x12, 0x2f, 0xc1, 0x91, 0xc7, 0xd8, 0x71,
-	0x12, 0x17, 0x4e, 0x80, 0x5a, 0x24, 0x5e, 0x03, 0xc5, 0xfe, 0x32, 0x5a, 0x35, 0xeb, 0x2e, 0x55,
-	0xbe, 0xef, 0xfb, 0xff, 0xfd, 0xb3, 0xbf, 0xbf, 0x8a, 0xee, 0x4f, 0xcb, 0x72, 0xfc, 0x86, 0xa6,
-	0x9c, 0x54, 0xb4, 0xcc, 0x34, 0xa9, 0x62, 0x72, 0x5a, 0xb2, 0x62, 0x1a, 0xc9, 0x42, 0x68, 0x81,
-	0xb7, 0x9b, 0x71, 0x64, 0xc6, 0x51, 0x15, 0xfb, 0xdb, 0x34, 0x4f, 0xb9, 0x20, 0xe6, 0xd7, 0xaa,
-	0xfc, 0xc1, 0x58, 0xa8, 0x5c, 0x28, 0x32, 0xa2, 0x8a, 0x59, 0x3b, 0xa9, 0xe2, 0x11, 0xd3, 0x34,
-	0x26, 0x92, 0x26, 0x29, 0xa7, 0x3a, 0x15, 0x1c, 0xb4, 0xdd, 0x44, 0x24, 0xc2, 0x7c, 0x92, 0xfa,
-	0x0b, 0xba, 0xf7, 0x12, 0x21, 0x92, 0x8c, 0x11, 0x2a, 0x53, 0x42, 0x39, 0x17, 0xda, 0x58, 0x14,
-	0x4c, 0x83, 0xd5, 0x4b, 0x4a, 0x5a, 0xd0, 0x1c, 0xe6, 0x61, 0x17, 0xe1, 0x17, 0x35, 0xf5, 0xc4,
-	0x34, 0x87, 0xec, 0xb4, 0x64, 0x4a, 0x87, 0x2f, 0xd1, 0x9d, 0xa5, 0xae, 0x92, 0x82, 0x2b, 0x86,
-	0x9f, 0x21, 0xcf, 0x9a, 0x7b, 0x6e, 0xdf, 0x7d, 0x78, 0xe3, 0x68, 0x37, 0x5a, 0x79, 0x63, 0x64,
-	0x2d, 0xc7, 0x9b, 0x67, 0x3f, 0xf7, 0x9c, 0xaf, 0x7f, 0xbf, 0x0d, 0xdc, 0x21, 0x78, 0xc2, 0x01,
-	0xda, 0x7a, 0xce, 0xa4, 0x50, 0xa9, 0x06, 0x0c, 0xee, 0xa1, 0x0d, 0x3a, 0x99, 0x14, 0x4c, 0xd9,
-	0x03, 0x37, 0x87, 0x4d, 0x19, 0x3e, 0x42, 0xb7, 0x2f, 0xb4, 0x00, 0xdf, 0x41, 0x1e, 0xcd, 0x45,
-	0xc9, 0x35, 0x68, 0xa1, 0x0a, 0xb7, 0xd0, 0xcd, 0x57, 0x42, 0xd3, 0xac, 0xb9, 0xfb, 0x01, 0xba,
-	0x05, 0x35, 0x18, 0xbb, 0xa8, 0xa3, 0xeb, 0x06, 0xf8, 0x6c, 0x51, 0xdb, 0x4e, 0x8a, 0x74, 0xcc,
-	0x16, 0x6c, 0x50, 0xff, 0xb7, 0xc9, 0xba, 0xd1, 0xd8, 0x4c, 0x71, 0xf4, 0xeb, 0x3a, 0xea, 0x98,
-	0xd5, 0xe0, 0x77, 0xc8, 0xb3, 0x6f, 0xc5, 0x07, 0x2d, 0x6b, 0x58, 0x5d, 0xaa, 0x7f, 0x78, 0x95,
-	0xcc, 0x82, 0xc3, 0xfd, 0x4f, 0xdf, 0xff, 0x7c, 0xb9, 0x76, 0x17, 0xef, 0x92, 0xcb, 0xb2, 0xc3,
-	0x1f, 0xd1, 0x06, 0xac, 0x07, 0xef, 0xb7, 0x9c, 0xba, 0xbc, 0x66, 0x3f, 0x5c, 0x27, 0x01, 0xe8,
-	0x63, 0x03, 0x3d, 0xc4, 0x0f, 0x5a, 0xa0, 0x13, 0xab, 0x25, 0xef, 0x21, 0x9d, 0x0f, 0x38, 0x43,
-	0x1d, 0xb3, 0x63, 0xbc, 0xd7, 0x72, 0xf4, 0x62, 0x1a, 0x7e, 0xff, 0x72, 0x01, 0x90, 0xfb, 0x86,
-	0xec, 0xe3, 0x5e, 0x0b, 0xd9, 0x44, 0x55, 0xd3, 0x4c, 0x34, 0xad, 0xb4, 0xc5, 0x10, 0x5b, 0x69,
-	0x4b, 0xa9, 0xae, 0xa5, 0x99, 0x84, 0x8f, 0x9f, 0x9c, 0xcd, 0x02, 0xf7, 0x7c, 0x16, 0xb8, 0xbf,
-	0x67, 0x81, 0xfb, 0x79, 0x1e, 0x38, 0xe7, 0xf3, 0xc0, 0xf9, 0x31, 0x0f, 0x9c, 0xd7, 0x3b, 0x17,
-	0x96, 0xb7, 0x60, 0xd2, 0x53, 0xc9, 0xd4, 0xc8, 0x33, 0x7f, 0xa5, 0xa7, 0xff, 0x02, 0x00, 0x00,
-	0xff, 0xff, 0xc7, 0x7c, 0x38, 0xc9, 0x11, 0x04, 0x00, 0x00,
+	// 540 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x54, 0xc1, 0x6e, 0xd3, 0x40,
+	0x10, 0x8d, 0x11, 0x49, 0x61, 0x04, 0x41, 0x2c, 0x11, 0x4a, 0xdd, 0x62, 0x52, 0x8b, 0x40, 0x29,
+	0x8a, 0x97, 0x84, 0x13, 0x47, 0xa2, 0xde, 0x29, 0x81, 0x13, 0x97, 0x6a, 0x13, 0xaf, 0x5c, 0x4b,
+	0xb1, 0xd7, 0xf5, 0xae, 0x2d, 0x02, 0x42, 0x48, 0x7c, 0x01, 0x12, 0x47, 0x7e, 0x83, 0x8f, 0xe0,
+	0x58, 0xc1, 0x85, 0x23, 0x4a, 0xf8, 0x0e, 0x84, 0xbc, 0x3b, 0x6e, 0x13, 0xc5, 0x2d, 0x5c, 0x22,
+	0xbd, 0x9d, 0x37, 0xef, 0x4d, 0xe6, 0xad, 0x17, 0xee, 0xcc, 0xb2, 0x6c, 0x72, 0xc4, 0xc2, 0x98,
+	0xe6, 0x2c, 0x9b, 0x2a, 0x9a, 0xf7, 0xe9, 0x71, 0xc6, 0xd3, 0x99, 0x97, 0xa4, 0x42, 0x09, 0x72,
+	0xb3, 0x2c, 0x7b, 0xba, 0xec, 0xe5, 0x7d, 0x7b, 0x6f, 0x22, 0x64, 0x24, 0x24, 0x1d, 0x33, 0xc9,
+	0x0d, 0x97, 0xe6, 0xfd, 0x31, 0x57, 0xac, 0x4f, 0x13, 0x16, 0x84, 0x31, 0x53, 0xa1, 0x88, 0x4d,
+	0xbb, 0xbd, 0x69, 0xb8, 0x87, 0x1a, 0x51, 0x03, 0xb0, 0xb4, 0x1d, 0x08, 0x11, 0x4c, 0x39, 0x65,
+	0x49, 0x48, 0x59, 0x1c, 0x0b, 0xa5, 0xfb, 0xb0, 0xea, 0xb6, 0x80, 0xbc, 0x28, 0xa4, 0x0f, 0x58,
+	0xca, 0x22, 0x39, 0xe2, 0xc7, 0x19, 0x97, 0xca, 0x7d, 0x04, 0xb7, 0x56, 0x4e, 0x65, 0x22, 0x62,
+	0xc9, 0x49, 0x0b, 0xea, 0x7e, 0x16, 0x45, 0xb3, 0xb6, 0xd5, 0xb1, 0x76, 0xaf, 0x8e, 0x0c, 0x70,
+	0xb7, 0xc1, 0xd6, 0xe4, 0x61, 0x1a, 0xfa, 0x01, 0x7f, 0x9e, 0xf0, 0x94, 0x29, 0x91, 0x96, 0x52,
+	0x4f, 0x61, 0xab, 0xb2, 0x8a, 0x92, 0x36, 0x5c, 0x11, 0x78, 0x86, 0xaa, 0xa7, 0xd8, 0xdd, 0x87,
+	0xe6, 0x3e, 0x4f, 0x84, 0x0c, 0x15, 0x8a, 0x91, 0x01, 0x6c, 0x30, 0xdf, 0x4f, 0xb9, 0x94, 0x86,
+	0x3c, 0x6c, 0x7f, 0xff, 0xda, 0x6b, 0xe1, 0xdf, 0x7d, 0x66, 0x2a, 0x2f, 0x55, 0x1a, 0xc6, 0xc1,
+	0xa8, 0x24, 0xba, 0x0f, 0xe1, 0xc6, 0xa9, 0x0a, 0x9a, 0xde, 0x86, 0x06, 0x8b, 0x44, 0x16, 0x2b,
+	0xb4, 0x44, 0xe4, 0x36, 0xe1, 0xda, 0x2b, 0xa1, 0xd8, 0xb4, 0x9c, 0xbd, 0x0b, 0xd7, 0x11, 0x9f,
+	0x2d, 0x40, 0x15, 0x07, 0xe5, 0x02, 0x34, 0x28, 0xda, 0x0e, 0xd2, 0x70, 0xc2, 0x97, 0xda, 0x10,
+	0x9f, 0xb5, 0x25, 0xc5, 0x41, 0xd9, 0xa6, 0xc1, 0xe0, 0xcf, 0x65, 0xa8, 0xeb, 0xd5, 0x90, 0xb7,
+	0xd0, 0x30, 0x9b, 0x26, 0x5d, 0x6f, 0xed, 0x1e, 0x78, 0xeb, 0xf9, 0xd8, 0xf7, 0xff, 0x45, 0x33,
+	0xc6, 0xee, 0xce, 0xc7, 0x1f, 0xbf, 0x3f, 0x5f, 0xda, 0x22, 0x9b, 0x74, 0xfd, 0xf6, 0x25, 0xc6,
+	0xf1, 0x03, 0x6c, 0xe0, 0x7a, 0xc8, 0x4e, 0x85, 0xea, 0x6a, 0x00, 0xb6, 0x7b, 0x11, 0x05, 0x4d,
+	0x7b, 0xda, 0xf4, 0x01, 0xe9, 0x56, 0x98, 0xfa, 0x86, 0x2b, 0xe9, 0x3b, 0x8c, 0xe7, 0x3d, 0x99,
+	0x42, 0x5d, 0x2f, 0x99, 0xdc, 0xad, 0xd0, 0x5e, 0x8e, 0xc3, 0xee, 0x9c, 0x4f, 0x40, 0xeb, 0x8e,
+	0xb6, 0xb6, 0x49, 0xbb, 0xc2, 0x5a, 0x67, 0x55, 0xb8, 0xe9, 0x6c, 0x2a, 0xdd, 0x96, 0x53, 0xac,
+	0x74, 0x5b, 0x89, 0xf5, 0x42, 0x37, 0x1d, 0x31, 0xf9, 0x62, 0x41, 0x73, 0xf5, 0xe2, 0x93, 0xde,
+	0x79, 0xd1, 0x55, 0x7e, 0x3e, 0xb6, 0xf7, 0xbf, 0x74, 0x9c, 0x69, 0x4f, 0xcf, 0x74, 0x8f, 0xb8,
+	0x15, 0x33, 0x8d, 0x75, 0xcb, 0x61, 0xf9, 0x7d, 0x0d, 0x87, 0xdf, 0xe6, 0x8e, 0x75, 0x32, 0x77,
+	0xac, 0x5f, 0x73, 0xc7, 0xfa, 0xb4, 0x70, 0x6a, 0x27, 0x0b, 0xa7, 0xf6, 0x73, 0xe1, 0xd4, 0x5e,
+	0xef, 0x06, 0xa1, 0x3a, 0xca, 0xc6, 0xde, 0x44, 0x44, 0x94, 0xe7, 0xc5, 0x23, 0x64, 0x7e, 0xf3,
+	0xc1, 0x63, 0xfa, 0x06, 0x05, 0xd5, 0x2c, 0xe1, 0x72, 0xdc, 0xd0, 0xcf, 0xc8, 0x93, 0xbf, 0x01,
+	0x00, 0x00, 0xff, 0xff, 0x59, 0x80, 0xf2, 0xeb, 0xdf, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -419,11 +508,16 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
+	// Params returns the vault module parameters.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
+	// Deposit returns the deposit balance for a given address.
 	Deposit(ctx context.Context, in *DepositRequest, opts ...grpc.CallOption) (*DepositResponse, error)
+	// Total returns the total recorded deposits across all users.
 	Total(ctx context.Context, in *TotalRequest, opts ...grpc.CallOption) (*TotalResponse, error)
-	// NEW: current Yuu price in uusdt
+	// Price returns the current YUU coin price.
 	Price(ctx context.Context, in *PriceRequest, opts ...grpc.CallOption) (*PriceResponse, error)
+	// BridgeOperator returns the currently authorized bridge operator address.
+	BridgeOperator(ctx context.Context, in *QueryBridgeOperatorRequest, opts ...grpc.CallOption) (*QueryBridgeOperatorResponse, error)
 }
 
 type queryClient struct {
@@ -470,13 +564,27 @@ func (c *queryClient) Price(ctx context.Context, in *PriceRequest, opts ...grpc.
 	return out, nil
 }
 
+func (c *queryClient) BridgeOperator(ctx context.Context, in *QueryBridgeOperatorRequest, opts ...grpc.CallOption) (*QueryBridgeOperatorResponse, error) {
+	out := new(QueryBridgeOperatorResponse)
+	err := c.cc.Invoke(ctx, "/yuuchain.vault.v1.Query/BridgeOperator", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
+	// Params returns the vault module parameters.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
+	// Deposit returns the deposit balance for a given address.
 	Deposit(context.Context, *DepositRequest) (*DepositResponse, error)
+	// Total returns the total recorded deposits across all users.
 	Total(context.Context, *TotalRequest) (*TotalResponse, error)
-	// NEW: current Yuu price in uusdt
+	// Price returns the current YUU coin price.
 	Price(context.Context, *PriceRequest) (*PriceResponse, error)
+	// BridgeOperator returns the currently authorized bridge operator address.
+	BridgeOperator(context.Context, *QueryBridgeOperatorRequest) (*QueryBridgeOperatorResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -494,6 +602,9 @@ func (*UnimplementedQueryServer) Total(ctx context.Context, req *TotalRequest) (
 }
 func (*UnimplementedQueryServer) Price(ctx context.Context, req *PriceRequest) (*PriceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Price not implemented")
+}
+func (*UnimplementedQueryServer) BridgeOperator(ctx context.Context, req *QueryBridgeOperatorRequest) (*QueryBridgeOperatorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BridgeOperator not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -572,7 +683,24 @@ func _Query_Price_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-var Query_serviceDesc = _Query_serviceDesc
+func _Query_BridgeOperator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryBridgeOperatorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).BridgeOperator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/yuuchain.vault.v1.Query/BridgeOperator",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).BridgeOperator(ctx, req.(*QueryBridgeOperatorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "yuuchain.vault.v1.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -592,6 +720,10 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Price",
 			Handler:    _Query_Price_Handler,
+		},
+		{
+			MethodName: "BridgeOperator",
+			Handler:    _Query_BridgeOperator_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -641,16 +773,66 @@ func (m *QueryParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	{
-		size, err := m.Params.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintQuery(dAtA, i, uint64(size))
+	if len(m.Dummy) > 0 {
+		i -= len(m.Dummy)
+		copy(dAtA[i:], m.Dummy)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Dummy)))
+		i--
+		dAtA[i] = 0xa
 	}
-	i--
-	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryBridgeOperatorRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryBridgeOperatorRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryBridgeOperatorRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryBridgeOperatorResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryBridgeOperatorResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryBridgeOperatorResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Operator) > 0 {
+		i -= len(m.Operator)
+		copy(dAtA[i:], m.Operator)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Operator)))
+		i--
+		dAtA[i] = 0xa
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -846,8 +1028,32 @@ func (m *QueryParamsResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = m.Params.Size()
-	n += 1 + l + sovQuery(uint64(l))
+	l = len(m.Dummy)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryBridgeOperatorRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryBridgeOperatorResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Operator)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
 	return n
 }
 
@@ -1008,9 +1214,9 @@ func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Params", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Dummy", wireType)
 			}
-			var msglen int
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -1020,24 +1226,155 @@ func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				msglen |= int(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if msglen < 0 {
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
 				return ErrInvalidLengthQuery
 			}
-			postIndex := iNdEx + msglen
+			postIndex := iNdEx + intStringLen
 			if postIndex < 0 {
 				return ErrInvalidLengthQuery
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Params.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.Dummy = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
 				return err
 			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryBridgeOperatorRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryBridgeOperatorRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryBridgeOperatorRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryBridgeOperatorResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryBridgeOperatorResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryBridgeOperatorResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Operator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Operator = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
