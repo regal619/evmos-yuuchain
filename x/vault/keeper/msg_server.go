@@ -150,15 +150,73 @@ func (m msgServer) MintFromBridge(
         return nil, fmt.Errorf("amount must be positive")
     }
 
-// (B) Optional network allow-list (OFF by default)
-    const enforceAllowedNetworks = false
-    var allowedNetworks = map[string]struct{}{
-        "ethereum": {},
-        "sepolia":  {},
-    }
-    if enforceAllowedNetworks {
-        if _, ok := allowedNetworks[strings.ToLower(msg.SourceNetwork)]; !ok {
-            return nil, fmt.Errorf("unrecognized source network: %s", msg.SourceNetwork)
+    // (B) Option B: On-chain network allow-list (params).
+  // Backwards-compatible behavior:
+  // - if AllowedSourceNetworks is empty => allow all networks
+  // - if non-empty => require msg.SourceNetwork to be in the list
+      params := m.Keeper.GetParams(ctx)
+
+      if len(params.AllowedSourceNetworks) > 0 {
+          sn := strings.ToLower(strings.TrimSpace(msg.SourceNetwork))
+          allowed := false
+          for _, n := range params.AllowedSourceNetworks {
+              if sn == strings.ToLower(strings.TrimSpace(n)) {
+                  allowed = true
+                  break
+              }
+          }
+          if !allowed {
+              return nil, fmt.Errorf("unrecognized source network: %s", msg.SourceNetwork)
+          }
+      }
+
+    // (B2) Token allowlist per network (USDT/USDC contracts).
+    // Backwards-compatible behavior:
+    // - if AllowedTokens is empty => do not enforce token-level restrictions
+    // - if non-empty => require (source_network, token_symbol, token_address) to match an entry
+    if len(params.AllowedTokens) > 0 {
+        sym := strings.ToUpper(strings.TrimSpace(msg.TokenSymbol))
+        if sym == "" {
+            return nil, fmt.Errorf("token_symbol is required")
+        }
+
+        addr := strings.TrimSpace(msg.TokenAddress)
+        if addr == "" {
+            return nil, fmt.Errorf("token_address is required")
+        }
+
+        sn := strings.ToLower(strings.TrimSpace(msg.SourceNetwork))
+
+        // Normalize address for EVM comparisons (0x...): compare lowercase.
+        // For non-EVM (e.g. Tron base58), keep as-is (case-sensitive).
+        normAddr := addr
+        if strings.HasPrefix(strings.ToLower(addr), "0x") {
+            normAddr = strings.ToLower(addr)
+        }
+
+        ok := false
+        for _, t := range params.AllowedTokens {
+            if t == nil {
+                continue
+            }
+            tsn := strings.ToLower(strings.TrimSpace(t.SourceNetwork))
+            tsym := strings.ToUpper(strings.TrimSpace(t.TokenSymbol))
+            taddr := strings.TrimSpace(t.TokenAddress)
+            if strings.HasPrefix(strings.ToLower(taddr), "0x") {
+                taddr = strings.ToLower(taddr)
+            }
+
+            if sn == tsn && sym == tsym && normAddr == taddr {
+                ok = true
+                break
+            }
+        }
+
+        if !ok {
+            return nil, fmt.Errorf(
+                "unsupported token: network=%s symbol=%s address=%s",
+                msg.SourceNetwork, msg.TokenSymbol, msg.TokenAddress,
+            )
         }
     }
 
@@ -173,6 +231,13 @@ func (m msgServer) MintFromBridge(
     if m.Keeper.IsSeenBridgeTx(ctx, msg.SourceNetwork, msg.SourceTxHash) {
         return nil, fmt.Errorf("bridge tx already processed: %s/%s", msg.SourceNetwork, msg.SourceTxHash)
     }
+
+    // (E) CREDIT VAULT FROM BRIDGE (native uusdt accounting)
+    if msg.SourceAmountUusdt == 0 {
+	return nil, fmt.Errorf("source_amount_uusdt must be provided")
+}
+
+    m.Keeper.AddVaultLiquidityFromBridge(goCtx, msg.SourceAmountUusdt)
 
     // Mint to module, then send to recipient
     if err := m.Keeper.bankKeeper.MintCoins(ctx, vaulttypes.ModuleName, sdk.NewCoins(coin)); err != nil {
@@ -190,6 +255,9 @@ func (m msgServer) MintFromBridge(
             sdk.NewAttribute("amount_uyuu", msg.AmountUyuu),
             sdk.NewAttribute("source_network", msg.SourceNetwork),
             sdk.NewAttribute("source_tx_hash", msg.SourceTxHash),
+            sdk.NewAttribute("token_symbol", msg.TokenSymbol),
+            sdk.NewAttribute("token_address", msg.TokenAddress),
+
         ),
     )
 

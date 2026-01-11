@@ -27,6 +27,11 @@ service Query {
     option (google.api.http).get = "/yuuchain/vault/v1/total";
   }
 
+  // External returns total externally locked USDT (USDT.yuu).
+  rpc External(TotalRequest) returns (TotalResponse) {
+    option (google.api.http).get = "/yuuchain/vault/v1/external";
+  }
+
   // Price returns the current YUU coin price.
   rpc Price(PriceRequest) returns (PriceResponse) {
     option (google.api.http).get = "/yuuchain/vault/v1/price";

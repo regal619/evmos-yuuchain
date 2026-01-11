@@ -22,15 +22,93 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// Keep Params simple for now; this matches your existing Go-generated struct.
+// One supported stablecoin token on one supported source network.
+// Example:
+//
+//	source_network: "ethereum"
+//	token_symbol:   "USDT"
+//	token_address:  "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+type AllowedToken struct {
+	// Source chain/network identifier. Keep it consistent with MsgMintFromBridge.source_network.
+	SourceNetwork string `protobuf:"bytes,1,opt,name=source_network,json=sourceNetwork,proto3" json:"source_network,omitempty"`
+	// "USDT" or "USDC" (uppercase recommended).
+	TokenSymbol string `protobuf:"bytes,2,opt,name=token_symbol,json=tokenSymbol,proto3" json:"token_symbol,omitempty"`
+	// Token contract address on the source chain (hex for EVM; base58 for Tron if you later choose to support it).
+	TokenAddress string `protobuf:"bytes,3,opt,name=token_address,json=tokenAddress,proto3" json:"token_address,omitempty"`
+}
+
+func (m *AllowedToken) Reset()         { *m = AllowedToken{} }
+func (m *AllowedToken) String() string { return proto.CompactTextString(m) }
+func (*AllowedToken) ProtoMessage()    {}
+func (*AllowedToken) Descriptor() ([]byte, []int) {
+	return fileDescriptor_231ee9f5f154f5c1, []int{0}
+}
+func (m *AllowedToken) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *AllowedToken) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_AllowedToken.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *AllowedToken) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AllowedToken.Merge(m, src)
+}
+func (m *AllowedToken) XXX_Size() int {
+	return m.Size()
+}
+func (m *AllowedToken) XXX_DiscardUnknown() {
+	xxx_messageInfo_AllowedToken.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AllowedToken proto.InternalMessageInfo
+
+func (m *AllowedToken) GetSourceNetwork() string {
+	if m != nil {
+		return m.SourceNetwork
+	}
+	return ""
+}
+
+func (m *AllowedToken) GetTokenSymbol() string {
+	if m != nil {
+		return m.TokenSymbol
+	}
+	return ""
+}
+
+func (m *AllowedToken) GetTokenAddress() string {
+	if m != nil {
+		return m.TokenAddress
+	}
+	return ""
+}
+
+// Vault module params (Option B: on-chain config).
 type Params struct {
+	// If empty: treat as "allow all networks" (backwards-compatible default).
+	// Vault module params (Option B: on-chain config).
+	// If non-empty: MintFromBridge must require msg.source_network to be in this list.
+	//
+	// Examples: "ethereum", "sepolia", "arbitrum", "polygon", "bsc"
+	AllowedSourceNetworks []string `protobuf:"bytes,1,rep,name=allowed_source_networks,json=allowedSourceNetworks,proto3" json:"allowed_source_networks,omitempty"`
+	// Exact stablecoin allowlist per network (USDT/USDC contracts).
+	// If empty: no token-level restrictions are enforced yet (we will enforce in the next step).
+	AllowedTokens []*AllowedToken `protobuf:"bytes,2,rep,name=allowed_tokens,json=allowedTokens,proto3" json:"allowed_tokens,omitempty"`
 }
 
 func (m *Params) Reset()         { *m = Params{} }
 func (m *Params) String() string { return proto.CompactTextString(m) }
 func (*Params) ProtoMessage()    {}
 func (*Params) Descriptor() ([]byte, []int) {
-	return fileDescriptor_231ee9f5f154f5c1, []int{0}
+	return fileDescriptor_231ee9f5f154f5c1, []int{1}
 }
 func (m *Params) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -59,23 +137,91 @@ func (m *Params) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Params proto.InternalMessageInfo
 
+func (m *Params) GetAllowedSourceNetworks() []string {
+	if m != nil {
+		return m.AllowedSourceNetworks
+	}
+	return nil
+}
+
+func (m *Params) GetAllowedTokens() []*AllowedToken {
+	if m != nil {
+		return m.AllowedTokens
+	}
+	return nil
+}
+
 func init() {
+	proto.RegisterType((*AllowedToken)(nil), "yuuchain.vault.v1.AllowedToken")
 	proto.RegisterType((*Params)(nil), "yuuchain.vault.v1.Params")
 }
 
 func init() { proto.RegisterFile("yuuchain/vault/v1/params.proto", fileDescriptor_231ee9f5f154f5c1) }
 
 var fileDescriptor_231ee9f5f154f5c1 = []byte{
-	// 137 bytes of a gzipped FileDescriptorProto
+	// 287 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0xab, 0x2c, 0x2d, 0x4d,
 	0xce, 0x48, 0xcc, 0xcc, 0xd3, 0x2f, 0x4b, 0x2c, 0xcd, 0x29, 0xd1, 0x2f, 0x33, 0xd4, 0x2f, 0x48,
 	0x2c, 0x4a, 0xcc, 0x2d, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x84, 0xc9, 0xeb, 0x81,
-	0xe5, 0xf5, 0xca, 0x0c, 0x95, 0x38, 0xb8, 0xd8, 0x02, 0xc0, 0x4a, 0x9c, 0x9c, 0x4e, 0x3c, 0x92,
-	0x63, 0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23, 0x39, 0xc6, 0x09, 0x8f, 0xe5, 0x18, 0x2e, 0x3c,
-	0x96, 0x63, 0xb8, 0xf1, 0x58, 0x8e, 0x21, 0x4a, 0x23, 0x3d, 0xb3, 0x24, 0xa3, 0x34, 0x49, 0x2f,
-	0x39, 0x3f, 0x57, 0x3f, 0xb5, 0x2c, 0x37, 0xbf, 0x18, 0x4a, 0x96, 0x19, 0x19, 0xe8, 0x57, 0x40,
-	0xad, 0x2a, 0xa9, 0x2c, 0x48, 0x2d, 0x4e, 0x62, 0x03, 0xdb, 0x63, 0x0c, 0x08, 0x00, 0x00, 0xff,
-	0xff, 0x1c, 0xa8, 0xc7, 0xb8, 0x89, 0x00, 0x00, 0x00,
+	0xe5, 0xf5, 0xca, 0x0c, 0x95, 0x6a, 0xb9, 0x78, 0x1c, 0x73, 0x72, 0xf2, 0xcb, 0x53, 0x53, 0x42,
+	0xf2, 0xb3, 0x53, 0xf3, 0x84, 0x54, 0xb9, 0xf8, 0x8a, 0xf3, 0x4b, 0x8b, 0x92, 0x53, 0xe3, 0xf3,
+	0x52, 0x4b, 0xca, 0xf3, 0x8b, 0xb2, 0x25, 0x18, 0x15, 0x18, 0x35, 0x38, 0x83, 0x78, 0x21, 0xa2,
+	0x7e, 0x10, 0x41, 0x21, 0x45, 0x2e, 0x9e, 0x12, 0x90, 0xfa, 0xf8, 0xe2, 0xca, 0xdc, 0xa4, 0xfc,
+	0x1c, 0x09, 0x26, 0xb0, 0x22, 0x6e, 0xb0, 0x58, 0x30, 0x58, 0x48, 0x48, 0x99, 0x8b, 0x17, 0xa2,
+	0x24, 0x31, 0x25, 0xa5, 0x28, 0xb5, 0xb8, 0x58, 0x82, 0x19, 0xac, 0x06, 0xa2, 0xcf, 0x11, 0x22,
+	0xa6, 0xd4, 0xc1, 0xc8, 0xc5, 0x16, 0x00, 0x76, 0xa2, 0x90, 0x19, 0x97, 0x78, 0x22, 0xc4, 0x25,
+	0xf1, 0xa8, 0x2e, 0x28, 0x96, 0x60, 0x54, 0x60, 0xd6, 0xe0, 0x0c, 0x12, 0x85, 0x4a, 0x07, 0x23,
+	0xbb, 0xa4, 0x58, 0xc8, 0x8d, 0x8b, 0x0f, 0xa6, 0x0f, 0x6c, 0x74, 0xb1, 0x04, 0x93, 0x02, 0xb3,
+	0x06, 0xb7, 0x91, 0xbc, 0x1e, 0x86, 0x6f, 0xf5, 0x90, 0xbd, 0x1a, 0xc4, 0x9b, 0x88, 0xc4, 0x2b,
+	0x76, 0x72, 0x3a, 0xf1, 0x48, 0x8e, 0xf1, 0xc2, 0x23, 0x39, 0xc6, 0x07, 0x8f, 0xe4, 0x18, 0x27,
+	0x3c, 0x96, 0x63, 0xb8, 0xf0, 0x58, 0x8e, 0xe1, 0xc6, 0x63, 0x39, 0x86, 0x28, 0x8d, 0xf4, 0xcc,
+	0x92, 0x8c, 0xd2, 0x24, 0xbd, 0xe4, 0xfc, 0x5c, 0xfd, 0xd4, 0xb2, 0xdc, 0xfc, 0x62, 0x28, 0x59,
+	0x66, 0x64, 0xa0, 0x5f, 0x01, 0x0d, 0xea, 0x92, 0xca, 0x82, 0xd4, 0xe2, 0x24, 0x36, 0x70, 0x38,
+	0x1b, 0x03, 0x02, 0x00, 0x00, 0xff, 0xff, 0x89, 0x26, 0x60, 0x20, 0x89, 0x01, 0x00, 0x00,
+}
+
+func (m *AllowedToken) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *AllowedToken) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *AllowedToken) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.TokenAddress) > 0 {
+		i -= len(m.TokenAddress)
+		copy(dAtA[i:], m.TokenAddress)
+		i = encodeVarintParams(dAtA, i, uint64(len(m.TokenAddress)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.TokenSymbol) > 0 {
+		i -= len(m.TokenSymbol)
+		copy(dAtA[i:], m.TokenSymbol)
+		i = encodeVarintParams(dAtA, i, uint64(len(m.TokenSymbol)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.SourceNetwork) > 0 {
+		i -= len(m.SourceNetwork)
+		copy(dAtA[i:], m.SourceNetwork)
+		i = encodeVarintParams(dAtA, i, uint64(len(m.SourceNetwork)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
 }
 
 func (m *Params) Marshal() (dAtA []byte, err error) {
@@ -98,6 +244,29 @@ func (m *Params) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if len(m.AllowedTokens) > 0 {
+		for iNdEx := len(m.AllowedTokens) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.AllowedTokens[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintParams(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	if len(m.AllowedSourceNetworks) > 0 {
+		for iNdEx := len(m.AllowedSourceNetworks) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.AllowedSourceNetworks[iNdEx])
+			copy(dAtA[i:], m.AllowedSourceNetworks[iNdEx])
+			i = encodeVarintParams(dAtA, i, uint64(len(m.AllowedSourceNetworks[iNdEx])))
+			i--
+			dAtA[i] = 0xa
+		}
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -112,12 +281,45 @@ func encodeVarintParams(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func (m *AllowedToken) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.SourceNetwork)
+	if l > 0 {
+		n += 1 + l + sovParams(uint64(l))
+	}
+	l = len(m.TokenSymbol)
+	if l > 0 {
+		n += 1 + l + sovParams(uint64(l))
+	}
+	l = len(m.TokenAddress)
+	if l > 0 {
+		n += 1 + l + sovParams(uint64(l))
+	}
+	return n
+}
+
 func (m *Params) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
+	if len(m.AllowedSourceNetworks) > 0 {
+		for _, s := range m.AllowedSourceNetworks {
+			l = len(s)
+			n += 1 + l + sovParams(uint64(l))
+		}
+	}
+	if len(m.AllowedTokens) > 0 {
+		for _, e := range m.AllowedTokens {
+			l = e.Size()
+			n += 1 + l + sovParams(uint64(l))
+		}
+	}
 	return n
 }
 
@@ -126,6 +328,152 @@ func sovParams(x uint64) (n int) {
 }
 func sozParams(x uint64) (n int) {
 	return sovParams(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *AllowedToken) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowParams
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: AllowedToken: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: AllowedToken: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SourceNetwork", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SourceNetwork = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenSymbol", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TokenSymbol = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TokenAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipParams(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthParams
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *Params) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
@@ -156,6 +504,72 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: Params: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AllowedSourceNetworks", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.AllowedSourceNetworks = append(m.AllowedSourceNetworks, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AllowedTokens", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.AllowedTokens = append(m.AllowedTokens, &AllowedToken{})
+			if err := m.AllowedTokens[len(m.AllowedTokens)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipParams(dAtA[iNdEx:])

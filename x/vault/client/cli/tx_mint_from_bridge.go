@@ -18,6 +18,7 @@ const (
 	FlagSourceTxHash       = "source-tx-hash"
 	FlagSourceMetadata     = "source-metadata"
 	FlagSourceMetadataFile = "source-metadata-file"
+        FlagSourceAmountUusdt = "source-amount-uusdt"
 )
 
 func CmdMintFromBridge() *cobra.Command {
@@ -37,6 +38,7 @@ func CmdMintFromBridge() *cobra.Command {
 			srcHash, _ := cmd.Flags().GetString(FlagSourceTxHash)
 			meta, _ := cmd.Flags().GetString(FlagSourceMetadata)
 			metaFile, _ := cmd.Flags().GetString(FlagSourceMetadataFile)
+                        sourceAmountUusdt, _ := cmd.Flags().GetUint64(FlagSourceAmountUusdt)
 
 			if metaFile != "" {
 				b, err := os.ReadFile(metaFile)
@@ -53,6 +55,7 @@ func CmdMintFromBridge() *cobra.Command {
 				SourceNetwork:      srcNet,
 				SourceTxHash:       srcHash,
 				SourceMetadataJson: meta,
+                                SourceAmountUusdt: sourceAmountUusdt,
 			}
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
@@ -65,6 +68,8 @@ func CmdMintFromBridge() *cobra.Command {
 	cmd.Flags().String(FlagSourceTxHash, "", "Source chain transaction hash")
 	cmd.Flags().String(FlagSourceMetadata, "", "Optional JSON metadata (inline)")
 	cmd.Flags().String(FlagSourceMetadataFile, "", "Optional path to JSON metadata file")
+        cmd.Flags().Uint64(FlagSourceAmountUusdt, 0, "Amount of externally locked USDT in uusdt (1e6 = 1 USDT)",
+)
 
 	_ = cmd.MarkFlagRequired(FlagRecipient)
 	_ = cmd.MarkFlagRequired(FlagAmountUyuu)

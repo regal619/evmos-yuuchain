@@ -76,6 +76,18 @@ message MsgMintFromBridge {
   // (vault address, from, to, block number, etc.). This can be used
   // for off-chain auditing and double-deposit detection.
   string source_metadata_json = 6;
+  // Stablecoin identity on the source chain.
+  // Examples: "USDT", "USDC"
+  string token_symbol = 7;
+
+  // Token contract address on the source chain.
+  // - EVM: 0x...
+  // - Tron (later, if you support it): base58
+  string token_address = 8;
+
+  // Amount of externally locked USDT, in uusdt (1e6 precision).
+  // Accounting-only: mirrors ETH escrow into the vault.
+  uint64 source_amount_uusdt = 9;
 }
 
 // Empty response for now, can be extended later if needed.

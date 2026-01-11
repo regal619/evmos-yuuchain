@@ -4,6 +4,33 @@ package yuuchain.vault.v1;
 
 option go_package = "github.com/evmos/evmos/v20/x/vault/types";
 
-// Keep Params simple for now; this matches your existing Go-generated struct.
-message Params {
+// One supported stablecoin token on one supported source network.
+// Example:
+//   source_network: "ethereum"
+//   token_symbol:   "USDT"
+//   token_address:  "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+    message AllowedToken {
+  // Source chain/network identifier. Keep it consistent with MsgMintFromBridge.source_network.
+  string source_network = 1;
+
+  // "USDT" or "USDC" (uppercase recommended).
+  string token_symbol = 2;
+
+  // Token contract address on the source chain (hex for EVM; base58 for Tron if you later choose to support it).
+  string token_address = 3;
+}
+
+
+// Vault module params (Option B: on-chain config).
+   message Params {
+    // If empty: treat as "allow all networks" (backwards-compatible default).
+    // Vault module params (Option B: on-chain config).
+    // If non-empty: MintFromBridge must require msg.source_network to be in this list.
+    //
+    // Examples: "ethereum", "sepolia", "arbitrum", "polygon", "bsc"
+  repeated string allowed_source_networks = 1;
+  
+  // Exact stablecoin allowlist per network (USDT/USDC contracts).
+  // If empty: no token-level restrictions are enforced yet (we will enforce in the next step).
+  repeated AllowedToken allowed_tokens = 2;
 }

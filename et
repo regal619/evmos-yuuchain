@@ -1,0 +1,478 @@
+[1mdiff --git a/x/vault/client/cli/query.go b/x/vault/client/cli/query.go[m
+[1mindex 75039c3..ba0fabe 100644[m
+[1m--- a/x/vault/client/cli/query.go[m
+[1m+++ b/x/vault/client/cli/query.go[m
+[36m@@ -6,124 +6,133 @@[m [mimport ([m
+ 	"github.com/spf13/cobra"[m
+ [m
+ 	"github.com/cosmos/cosmos-sdk/client"[m
+[31m-	sdkflags "github.com/cosmos/cosmos-sdk/client/flags"[m
+[32m+[m	[32m"github.com/cosmos/cosmos-sdk/client/flags"[m
+ [m
+[31m-        vaulttypes "github.com/evmos/evmos/v20/x/vault/types"[m
+[32m+[m	[32mvaulttypes "github.com/evmos/evmos/v20/x/vault/types"[m
+ )[m
+ [m
+[31m-// GetQueryCmd returns the parent "vault" query command.[m
+ func GetQueryCmd() *cobra.Command {[m
+ 	cmd := &cobra.Command{[m
+[31m-		Use:   "vault",[m
+[31m-		Short: "Vault module queries",[m
+[32m+[m		[32mUse:                        vaulttypes.ModuleName,[m
+[32m+[m		[32mShort:                      "Query commands for the vault module",[m
+[32m+[m		[32mDisableFlagParsing:         true,[m
+[32m+[m		[32mSuggestionsMinimumDistance: 2,[m
+[32m+[m		[32mRunE:                       client.ValidateCmd,[m
+ 	}[m
+ [m
+ 	cmd.AddCommand([m
+[31m-		CmdParams(),[m
+[31m-		CmdQueryDeposit(),[m
+[31m-                CmdQueryTotal(),[m
+[31m-                CmdPrice(),[m
+[31m-                CmdYuuBalance(),[m
+[31m-                CmdVaultSnapshot(),[m
+[32m+[m		[32mGetCmdTotal(),[m
+[32m+[m		[32mGetCmdPrice(),[m
+[32m+[m		[32mGetCmdDeposit(),[m
+[32m+[m[32m                GetCmdMyDeposit(),[m
+ 	)[m
+ [m
+ 	return cmd[m
+ }[m
+ [m
+[31m-// CmdParams queries the vault module params.[m
+[31m-func CmdParams() *cobra.Command {[m
+[32m+[m[32mfunc GetCmdTotal() *cobra.Command {[m
+ 	cmd := &cobra.Command{[m
+[31m-		Use:   "params",[m
+[31m-		Short: "Query vault module params",[m
+[32m+[m		[32mUse:   "total",[m
+[32m+[m		[32mShort: "Query total deposited amount across all accounts",[m
+ 		Args:  cobra.NoArgs,[m
+ 		RunE: func(cmd *cobra.Command, _ []string) error {[m
+[31m-			clientCtx, err := client.GetClientQueryContext(cmd)[m
+[32m+[m			[32mcctx, err := client.GetClientQueryContext(cmd)[m
+ 			if err != nil {[m
+ 				return err[m
+ 			}[m
+[31m-			q := vaulttypes.NewQueryClient(clientCtx)[m
+[31m-			res, err := q.Params(context.Background(), &vaulttypes.QueryParamsRequest{})[m
+[32m+[m
+[32m+[m			[32mq := vaulttypes.NewQueryClient(cctx)[m
+[32m+[m			[32mres, err := q.Total(context.Background(), &vaulttypes.TotalRequest{})[m
+ 			if err != nil {[m
+ 				return err[m
+ 			}[m
+[31m-			return clientCtx.PrintProto(res)[m
+[32m+[m
+[32m+[m			[32mreturn cctx.PrintProto(res)[m
+ 		},[m
+ 	}[m
+[31m-	sdkflags.AddQueryFlagsToCmd(cmd)[m
+[32m+[m
+[32m+[m	[32mflags.AddQueryFlagsToCmd(cmd)[m
+ 	return cmd[m
+ }[m
+ [m
+[31m-// CmdDeposit queries the recorded deposit for a given address.[m
+[31m-func CmdQueryDeposit() *cobra.Command {[m
+[32m+[m[32mfunc GetCmdPrice() *cobra.Command {[m
+[32m+[m	[32mcmd := &cobra.Command{[m
+[32m+[m		[32mUse:   "price",[m
+[32m+[m		[32mShort: "Query current YUU price",[m
+[32m+[m		[32mArgs:  cobra.NoArgs,[m
+[32m+[m		[32mRunE: func(cmd *cobra.Command, _ []string) error {[m
+[32m+[m			[32mcctx, err := client.GetClientQueryContext(cmd)[m
+[32m+[m			[32mif err != nil {[m
+[32m+[m				[32mreturn err[m
+[32m+[m			[32m}[m
+[32m+[m
+[32m+[m			[32mq := vaulttypes.NewQueryClient(cctx)[m
+[32m+[m			[32mres, err := q.Price(context.Background(), &vaulttypes.PriceRequest{})[m
+[32m+[m			[32mif err != nil {[m
+[32m+[m				[32mreturn err[m
+[32m+[m			[32m}[m
+[32m+[m
+[32m+[m			[32mreturn cctx.PrintProto(res)[m
+[32m+[m		[32m},[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32mflags.AddQueryFlagsToCmd(cmd)[m
+[32m+[m	[32mreturn cmd[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunc GetCmdDeposit() *cobra.Command {[m
+ 	cmd := &cobra.Command{[m
+ 		Use:   "deposit [address]",[m
+[31m-		Short: "Query recorded deposit amount for an address",[m
+[32m+[m		[32mShort: "Query deposit amount for an address",[m
+ 		Args:  cobra.ExactArgs(1),[m
+ 		RunE: func(cmd *cobra.Command, args []string) error {[m
+ 			addr := args[0][m
+ [m
+[31m-			clientCtx, err := client.GetClientQueryContext(cmd)[m
+[32m+[m			[32mcctx, err := client.GetClientQueryContext(cmd)[m
+ 			if err != nil {[m
+ 				return err[m
+ 			}[m
+[31m-			q := vaulttypes.NewQueryClient(clientCtx)[m
+[31m-			res, err := q.Deposit(context.Background(), &vaulttypes.DepositRequest{[m
+[31m-				Address: addr,[m
+[31m-			})[m
+[32m+[m
+[32m+[m			[32mq := vaulttypes.NewQueryClient(cctx)[m
+[32m+[m			[32mres, err := q.Deposit(context.Background(), &vaulttypes.DepositRequest{Address: addr})[m
+ 			if err != nil {[m
+ 				return err[m
+ 			}[m
+[31m-			return clientCtx.PrintProto(res)[m
+[32m+[m
+[32m+[m			[32mreturn cctx.PrintProto(res)[m
+ 		},[m
+ 	}[m
+[31m-	sdkflags.AddQueryFlagsToCmd(cmd)[m
+[32m+[m
+[32m+[m	[32mflags.AddQueryFlagsToCmd(cmd)[m
+ 	return cmd[m
+ }[m
+[31m-// CmdQueryTotal queries the global total deposits recorded by the vault.[m
+[31m-func CmdQueryTotal() *cobra.Command {[m
+[32m+[m
+[32m+[m
+[32m+[m[32m       func GetCmdMyDeposit() *cobra.Command {[m
+         cmd := &cobra.Command{[m
+[31m-                Use:   "total",[m
+[31m-                Short: "Query total recorded deposits",[m
+[32m+[m[32m                Use:   "my-deposit",[m
+[32m+[m[32m                Short: "Query deposit amount for the --from address",[m
+                 Args:  cobra.NoArgs,[m
+                 RunE: func(cmd *cobra.Command, _ []string) error {[m
+[31m-                        clientCtx, err := client.GetClientQueryContext(cmd)[m
+[31m-                        if err != nil {[m
+[31m-                                return err[m
+[31m-                        }[m
+[31m-                        q := vaulttypes.NewQueryClient(clientCtx)[m
+[31m-                        res, err := q.Total(context.Background(), &vaulttypes.TotalRequest{})[m
+[31m-                        if err != nil {[m
+[31m-                                return err[m
+[31m-                        }[m
+[31m-                        return clientCtx.PrintProto(res)[m
+[31m-                },[m
+[31m-        }[m
+[31m-        sdkflags.AddQueryFlagsToCmd(cmd)[m
+[31m-        return cmd[m
+[31m-}[m
+[31m-[m
+[31m-func CmdPrice() *cobra.Command {[m
+[31m-    cmd := &cobra.Command{[m
+[31m-        Use:   "price",[m
+[31m-        Short: "show current Yuu price (uusdt per 1 yuu)",[m
+[31m-        Args:  cobra.NoArgs,[m
+[31m-        RunE: func(cmd *cobra.Command, args []string) error {[m
+[31m-            clientCtx, err := client.GetClientQueryContext(cmd)[m
+[31m-            if err != nil {[m
+[32m+[m[32m                // We use TxContext here so --from can resolve key names from the keyring.[m
+[32m+[m[32m                cctx, err := client.GetClientTxContext(cmd)[m
+[32m+[m[32m                if err != nil {[m
+                 return err[m
+[31m-            }[m
+[31m-[m
+[31m-            q := vaulttypes.NewQueryClient(clientCtx)[m
+[32m+[m[32m                }[m
+[32m+[m[32m                        fromAddr := cctx.GetFromAddress().String()[m
+ [m
+[31m-            res, err := q.Price(context.Background(), &vaulttypes.PriceRequest{})[m
+[31m-            if err != nil {[m
+[31m-                return err[m
+[31m-            }[m
+[32m+[m[32m                        q := vaulttypes.NewQueryClient(cctx)[m
+[32m+[m[32m                        res, err := q.Deposit(context.Background(), &vaulttypes.DepositRequest{[m
+[32m+[m[32m                                Address: fromAddr,[m
+[32m+[m[32m                        })[m
+[32m+[m[32m                         if err != nil {[m
+[32m+[m[32m                                  return err[m
+[32m+[m[32m                          }[m
+ [m
+[31m-            return clientCtx.PrintProto(res)[m
+[31m-        },[m
+[31m-    }[m
+[32m+[m[32m                        return cctx.PrintProto(res)[m
+[32m+[m[32m                },[m
+[32m+[m[32m        }[m
+ [m
+[31m-    sdkflags.AddQueryFlagsToCmd(cmd)[m
+[31m-    return cmd[m
+[32m+[m[32m        flags.AddQueryFlagsToCmd(cmd)[m
+[32m+[m[32m        return cmd[m
+ }[m
+[1mdiff --git a/x/vault/client/cli/tx.go b/x/vault/client/cli/tx.go[m
+[1mindex 3ec5786..aa81d11 100644[m
+[1m--- a/x/vault/client/cli/tx.go[m
+[1m+++ b/x/vault/client/cli/tx.go[m
+[36m@@ -1,19 +1,31 @@[m
+ package cli[m
+ [m
+[31m-import "github.com/spf13/cobra"[m
+[32m+[m[32mimport ([m
+[32m+[m	[32m"github.com/spf13/cobra"[m
+[32m+[m
+[32m+[m	[32m"github.com/cosmos/cosmos-sdk/client"[m
+[32m+[m	[32m"github.com/cosmos/cosmos-sdk/client/flags"[m
+[32m+[m
+[32m+[m	[32mvaulttypes "github.com/evmos/evmos/v20/x/vault/types"[m
+[32m+[m[32m)[m
+ [m
+ // GetTxCmd returns the root tx command for the vault module.[m
+[32m+[m[32m// It only wires commands that actually exist in this folder.[m
+ func GetTxCmd() *cobra.Command {[m
+ 	cmd := &cobra.Command{[m
+[31m-		Use:                        "vault",[m
+[31m-		Short:                      "Vault transaction subcommands",[m
+[32m+[m		[32mUse:                        vaulttypes.ModuleName,[m
+[32m+[m		[32mShort:                      "Transaction commands for the vault module",[m
+ 		DisableFlagParsing:         true,[m
+ 		SuggestionsMinimumDistance: 2,[m
+[31m-		RunE:                       func(cmd *cobra.Command, args []string) error { return cmd.Help() },[m
+[32m+[m		[32mRunE:                       client.ValidateCmd,[m
+ 	}[m
+ [m
+[31m-	cmd.AddCommand(CmdDeposit())[m
+[31m-        cmd.AddCommand(CmdMintFromBridge())[m
+[31m-        cmd.AddCommand(CmdMintFromBridge())[m
+[32m+[m	[32m// Add tx subcommands that exist.[m
+[32m+[m	[32mcmd.AddCommand([m
+[32m+[m		[32mGetCmdDeposit(),      // from tx_deposit.go (already in your folder)[m
+[32m+[m		[32mCmdMintFromBridge(),  // from tx_mint_from_bridge.go[m
+[32m+[m	[32m)[m
+[32m+[m
+[32m+[m	[32mflags.AddTxFlagsToCmd(cmd)[m
+ 	return cmd[m
+ }[m
+[1mdiff --git a/x/vault/client/cli/tx_mint_bridge.go b/x/vault/client/cli/tx_mint_bridge.go[m
+[1mdeleted file mode 100644[m
+[1mindex 8764ccb..0000000[m
+[1m--- a/x/vault/client/cli/tx_mint_bridge.go[m
+[1m+++ /dev/null[m
+[36m@@ -1,87 +0,0 @@[m
+[31m-package cli[m
+[31m-[m
+[31m-import ([m
+[31m-    "fmt"[m
+[31m-    "os"[m
+[31m-[m
+[31m-    "github.com/spf13/cobra"[m
+[31m-[m
+[31m-    "github.com/cosmos/cosmos-sdk/client"[m
+[31m-    "github.com/cosmos/cosmos-sdk/client/flags"[m
+[31m-    "github.com/cosmos/cosmos-sdk/client/tx"[m
+[31m-[m
+[31m-    vaulttypes "github.com/evmos/evmos/v20/x/vault/types"[m
+[31m-)[m
+[31m-[m
+[31m-const ([m
+[31m-    FlagRecipient      = "recipient"[m
+[31m-    FlagAmountUyuu     = "amount"[m
+[31m-    FlagSourceNetwork  = "source-network"[m
+[31m-    FlagSourceTxHash   = "source-tx-hash"[m
+[31m-    FlagSourceMetadata = "source-metadata"[m
+[31m-    FlagMetadataFile   = "metadata-file"[m
+[31m-)[m
+[31m-[m
+[31m-func CmdMintFromBridge() *cobra.Command {[m
+[31m-    cmd := &cobra.Command{[m
+[31m-        Use:   "mint-from-bridge",[m
+[31m-        Short: "Mint YUU on YuuChain based on a verified external deposit",[m
+[31m-        Args:  cobra.NoArgs,[m
+[31m-        RunE: func(cmd *cobra.Command, args []string) error {[m
+[31m-            clientCtx, err := client.GetClientTxContext(cmd)[m
+[31m-            if err != nil {[m
+[31m-                return err[m
+[31m-            }[m
+[31m-[m
+[31m-            creator := clientCtx.GetFromAddress().String()[m
+[31m-            recipient, _ := cmd.Flags().GetString(FlagRecipient)[m
+[31m-            amountUyuu, _ := cmd.Flags().GetString(FlagAmountUyuu)[m
+[31m-            sourceNetwork, _ := cmd.Flags().GetString(FlagSourceNetwork)[m
+[31m-            sourceTxHash, _ := cmd.Flags().GetString(FlagSourceTxHash)[m
+[31m-            sourceMetadata, _ := cmd.Flags().GetString(FlagSourceMetadata)[m
+[31m-            metadataFile, _ := cmd.Flags().GetString(FlagMetadataFile)[m
+[31m-[m
+[31m-            if recipient == "" {[m
+[31m-                return fmt.Errorf("--%s is required", FlagRecipient)[m
+[31m-            }[m
+[31m-            if amountUyuu == "" {[m
+[31m-                return fmt.Errorf("--%s is required (uyuu, 18-decimal integer)", FlagAmountUyuu)[m
+[31m-            }[m
+[31m-            if sourceNetwork == "" {[m
+[31m-                return fmt.Errorf("--%s is required", FlagSourceNetwork)[m
+[31m-            }[m
+[31m-            if sourceTxHash == "" {[m
+[31m-                return fmt.Errorf("--%s is required", FlagSourceTxHash)[m
+[31m-            }[m
+[31m-[m
+[31m-            if metadataFile != "" {[m
+[31m-                b, err := os.ReadFile(metadataFile)[m
+[31m-                if err != nil {[m
+[31m-                    return fmt.Errorf("read --%s: %w", FlagMetadataFile, err)[m
+[31m-                }[m
+[31m-                sourceMetadata = string(b)[m
+[31m-            }[m
+[31m-[m
+[31m-            msg := &vaulttypes.MsgMintFromBridge{[m
+[31m-                Creator:            creator,[m
+[31m-                Recipient:          recipient,[m
+[31m-                AmountUyuu:         amountUyuu,[m
+[31m-                SourceNetwork:      sourceNetwork,[m
+[31m-                SourceTxHash:       sourceTxHash,[m
+[31m-                SourceMetadataJson: sourceMetadata,[m
+[31m-            }[m
+[31m-[m
+[31m-            return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)[m
+[31m-        },[m
+[31m-    }[m
+[31m-[m
+[31m-    cmd.Flags().String(FlagRecipient, "", "Recipient bech32 address on YuuChain")[m
+[31m-    cmd.Flags().String(FlagAmountUyuu, "", "Amount to mint in uyuu (18-decimal integer, e.g. 1000000000000000000 for 1 YUU)")[m
+[31m-    cmd.Flags().String(FlagSourceNetwork, "", "Source network identifier (e.g. sepolia)")[m
+[31m-    cmd.Flags().String(FlagSourceTxHash, "", "Source chain tx hash")[m
+[31m-    cmd.Flags().String(FlagSourceMetadata, "", "Optional source metadata JSON (string)")[m
+[31m-    cmd.Flags().String(FlagMetadataFile, "", "Optional path to a file containing JSON metadata")[m
+[31m-[m
+[31m-    flags.AddTxFlagsToCmd(cmd)[m
+[31m-    return cmd[m
+[31m-}[m
+[1mdiff --git a/x/vault/client/cli/tx_mint_from_bridge.go b/x/vault/client/cli/tx_mint_from_bridge.go[m
+[1mindex 8486e77..6d754aa 100644[m
+[1m--- a/x/vault/client/cli/tx_mint_from_bridge.go[m
+[1m+++ b/x/vault/client/cli/tx_mint_from_bridge.go[m
+[36m@@ -61,7 +61,7 @@[m [mfunc CmdMintFromBridge() *cobra.Command {[m
+ [m
+ 	cmd.Flags().String(FlagRecipient, "", "YuuChain recipient bech32 address")[m
+ 	cmd.Flags().String(FlagAmountUyuu, "", "Amount to mint in uyuu (1e18 precision)")[m
+[31m-	cmd.Flags().String(FlagSourceNetwork, "", Source network ID (e.g. "sepolia"))[m
+[32m+[m[32m        cmd.Flags().String(FlagSourceNetwork, "", "Source network ID (e.g. \"sepolia\")")[m
+ 	cmd.Flags().String(FlagSourceTxHash, "", "Source chain transaction hash")[m
+ 	cmd.Flags().String(FlagSourceMetadata, "", "Optional JSON metadata (inline)")[m
+ 	cmd.Flags().String(FlagSourceMetadataFile, "", "Optional path to JSON metadata file")[m
+[1mdiff --git a/x/vault/keeper/keeper.go b/x/vault/keeper/keeper.go[m
+[1mindex 564b1c5..0dfd6b4 100644[m
+[1m--- a/x/vault/keeper/keeper.go[m
+[1m+++ b/x/vault/keeper/keeper.go[m
+[36m@@ -151,6 +151,18 @@[m [mfunc (k Keeper) GetAuthority() string {[m
+         _ = kv.Set(vaulttypes.BridgeOperatorKey, addr)[m
+     }[m
+ [m
+[32m+[m
+[32m+[m[32m    // BridgeOperator is a read-only gRPC query that returns the currently authorized bridge operator.[m
+[32m+[m[32m    // This exposes the same authority enforced by MsgMintFromBridge.[m
+[32m+[m[32m    func (k Keeper) BridgeOperator(ctx context.Context, _ *vaulttypes.QueryBridgeOperatorRequest) (*vaulttypes.QueryBridgeOperatorResponse, error) {[m
+[32m+[m[32m        sdkCtx := sdk.UnwrapSDKContext(ctx)[m
+[32m+[m[32m        op := k.GetBridgeOperator(sdkCtx)[m
+[32m+[m[32m        if op == nil {[m
+[32m+[m[32m            return &vaulttypes.QueryBridgeOperatorResponse{Operator: ""}, nil[m
+[32m+[m[32m        }[m
+[32m+[m[32m        return &vaulttypes.QueryBridgeOperatorResponse{Operator: op.String()}, nil[m
+[32m+[m[32m    }[m
+[32m+[m
+     // --- Idempotency on (source_network, source_tx_hash) ---[m
+     func (k Keeper) seenBridgeTxKey(network, txhash string) []byte {[m
+         key := fmt.Sprintf("%s%s|%s", string(vaulttypes.SeenBridgeTxPrefix), strings.ToLower(network), strings.ToLower(txhash))[m
+[1mdiff --git a/x/vault/keeper/msg_server.go b/x/vault/keeper/msg_server.go[m
+[1mindex 691261c..13c585a 100644[m
+[1m--- a/x/vault/keeper/msg_server.go[m
+[1m+++ b/x/vault/keeper/msg_server.go[m
+[36m@@ -107,18 +107,27 @@[m [mfunc (m msgServer) MintFromBridge([m
+     if msg == nil {[m
+         return nil, fmt.Errorf("nil message")[m
+     }[m
+[31m-// (A) Bridge operator allow-list (bootstrap on first successful call)[m
+[31m-    creatorAddr, err := sdk.AccAddressFromBech32(msg.Creator)[m
+[31m-    if err != nil {[m
+[31m-        return nil, fmt.Errorf("invalid creator: %w", err)[m
+[31m-    }[m
+[31m-    if op := m.Keeper.GetBridgeOperator(ctx); op == nil {[m
+[31m-        // First successful caller becomes the bridge operator.[m
+[31m-        m.Keeper.SetBridgeOperator(ctx, creatorAddr)[m
+[31m-    } else if !creatorAddr.Equals(op) {[m
+[31m-        return nil, fmt.Errorf("only bridge operator can mint")[m
+[31m-    }[m
+[31m-[m
+[32m+[m[32m    // (A) Bridge operator allow-list (PRODUCTION LOCK)[m
+[32m+[m[32m      creatorAddr, err := sdk.AccAddressFromBech32(msg.Creator)[m
+[32m+[m[32m      if err != nil {[m
+[32m+[m[32m          return nil, fmt.Errorf("invalid creator: %w", err)[m
+[32m+[m[32m      }[m
+[32m+[m
+[32m+[m[32m      const bridgeOperatorBech32 = "evmos1xgeppskksl5g6fnvzlnaun4xnql8f8gdr5dsz7"[m
+[32m+[m
+[32m+[m[32m      op := m.Keeper.GetBridgeOperator(ctx)[m
+[32m+[m[32m      if op == nil {[m
+[32m+[m[32m          fixedOp, err := sdk.AccAddressFromBech32(bridgeOperatorBech32)[m
+[32m+[m[32m          if err != nil {[m
+[32m+[m[32m              return nil, fmt.Errorf("invalid fixed bridge operator address: %w", err)[m
+[32m+[m[32m          }[m
+[32m+[m[32m          m.Keeper.SetBridgeOperator(ctx, fixedOp)[m
+[32m+[m[32m          op = fixedOp[m
+[32m+[m[32m      }[m
+[32m+[m
+[32m+[m[32m      if !creatorAddr.Equals(op) {[m
+[32m+[m[32m          return nil, fmt.Errorf("only bridge operator can mint")[m
+[32m+[m[32m      }[m
+ [m
+     // Parse recipient[m
+     recipient, err := sdk.AccAddressFromBech32(msg.Recipient)[m
+[1mdiff --git a/x/vault/module/module.go b/x/vault/module/module.go[m
+[1mindex 6336cf4..b8dfe87 100644[m
+[1m--- a/x/vault/module/module.go[m
+[1m+++ b/x/vault/module/module.go[m
+[36m@@ -12,6 +12,9 @@[m [mimport ([m
+     sdk "github.com/cosmos/cosmos-sdk/types"[m
+     "github.com/cosmos/cosmos-sdk/types/module"[m
+ [m
+[32m+[m[32m    "github.com/spf13/cobra"[m
+[32m+[m[32m    "github.com/evmos/evmos/v20/x/vault/client/cli"[m
+[32m+[m
+     appmodule "cosmossdk.io/core/appmodule"[m
+ [m
+     vaultkeeper "github.com/evmos/evmos/v20/x/vault/keeper"[m
+[36m@@ -79,8 +82,9 @@[m [mfunc (AppModuleBasic) RegisterGRPCGatewayRoutes([m
+ // We’re not wiring CLI here (tx/query commands) – they can be added later.[m
+ // This keeps compilation simple and avoids vaultcli.NewTxCmd errors.[m
+ // func (AppModuleBasic) GetTxCmd() *cobra.Command    { return nil }[m
+[31m-// func (AppModuleBasic) GetQueryCmd() *cobra.Command { return nil }[m
+[31m-[m
+[32m+[m[32mfunc (AppModuleBasic) GetQueryCmd() *cobra.Command {[m
+[32m+[m	[32mreturn cli.GetQueryCmd()[m
+[32m+[m[32m}[m
+ // -----------------------------------------------------------------------------[m
+ // AppModule[m
+ // -----------------------------------------------------------------------------[m
+[1mdiff --git a/x/vault/types/query.proto b/x/vault/types/query.proto[m
+[1mindex 4134ed0..cda9ffe 100644[m
+[1m--- a/x/vault/types/query.proto[m
+[1m+++ b/x/vault/types/query.proto[m
+[36m@@ -31,6 +31,11 @@[m [mservice Query {[m
+   rpc Price(PriceRequest) returns (PriceResponse) {[m
+     option (google.api.http).get = "/yuuchain/vault/v1/price";[m
+   }[m
+[32m+[m
+[32m+[m[32m  // BridgeOperator returns the currently authorized bridge operator address.[m
+[32m+[m[32m  rpc BridgeOperator(QueryBridgeOperatorRequest) returns (QueryBridgeOperatorResponse) {[m
+[32m+[m[32m    option (google.api.http).get = "/yuuchain/vault/v1/bridge_operator";[m
+[32m+[m[32m  }[m
+ }[m
+ [m
+ // ---------------------------- Messages ----------------------------[m
+[36m@@ -41,6 +46,11 @@[m [mmessage QueryParamsResponse {[m
+   string dummy = 1; // placeholder until params defined[m
+ }[m
+ [m
+[32m+[m[32mmessage QueryBridgeOperatorRequest {}[m
+[32m+[m[32mmessage QueryBridgeOperatorResponse {[m
+[32m+[m[32m  string operator = 1;[m
+[32m+[m[32m}[m
+[32m+[m
+ // Deposit[m
+ message DepositRequest {[m
+   string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];[m

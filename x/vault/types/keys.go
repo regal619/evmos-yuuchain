@@ -20,7 +20,7 @@ var (
 	KeyPrefixDeposits = []byte{0x02}
 
 	// Params key (future use)
-	ParamsKey = collections.NewPrefix(0)
+	ParamsKey = collections.NewPrefix(0x03)
 )
 var (
     // Bridge operator (single address) & idempotency keys

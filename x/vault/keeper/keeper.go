@@ -96,6 +96,18 @@ func (k Keeper) setInt(store corestore.KVStore, key []byte, v sdkmath.Int) {
 	_ = store.Set(key, v.BigInt().Bytes())
 }
 
+// AddVaultLiquidityFromBridge increases the vault's native USDT total.
+// This is accounting-only and may ONLY be called by the bridge path.
+func (k Keeper) AddVaultLiquidityFromBridge(ctx context.Context, amount uint64) {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	kv := k.storeService.OpenKVStore(sdkCtx)
+
+	amt := sdkmath.NewIntFromUint64(amount)
+
+	curTotal := k.getInt(kv, vaulttypes.KeyTotalDeposits)
+	k.setInt(kv, vaulttypes.KeyTotalDeposits, curTotal.Add(amt))
+}
+
 // AddDeposit increments <addr>'s deposit and the global total by <amount>.
 func (k Keeper) AddDeposit(ctx context.Context, addr sdk.AccAddress, amount uint64) error {
         sdkCtx := sdk.UnwrapSDKContext(ctx)
@@ -162,6 +174,7 @@ func (k Keeper) GetAuthority() string {
         }
         return &vaulttypes.QueryBridgeOperatorResponse{Operator: op.String()}, nil
     }
+
 
     // --- Idempotency on (source_network, source_tx_hash) ---
     func (k Keeper) seenBridgeTxKey(network, txhash string) []byte {

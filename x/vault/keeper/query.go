@@ -23,7 +23,7 @@ func (k *Keeper) Params(ctx context.Context, req *vaulttypes.QueryParamsRequest)
         }
         sdkCtx := sdk.UnwrapSDKContext(ctx)
         p := k.GetParams(sdkCtx) // value
-        return &vaulttypes.QueryParamsResponse{Params: p}, nil
+        return &vaulttypes.QueryParamsResponse{Params: &p}, nil
 }
 
 // Deposit returns the recorded deposit amount for an address.

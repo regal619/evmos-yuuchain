@@ -14,7 +14,7 @@ func (k Keeper) InitGenesis(ctx context.Context, genState *vaulttypes.GenesisSta
         // 1) Params
         params := genState.Params
         // if zero-value, fall back to defaults
-        if (params == vaulttypes.Params{}) {
+        if len(params.AllowedSourceNetworks) == 0 {
                 params = vaulttypes.DefaultParams()
         }
         k.SetParams(sdkCtx, params)

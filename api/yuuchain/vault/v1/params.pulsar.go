@@ -13,12 +13,661 @@ import (
 )
 
 var (
-	md_Params protoreflect.MessageDescriptor
+	md_AllowedToken                protoreflect.MessageDescriptor
+	fd_AllowedToken_source_network protoreflect.FieldDescriptor
+	fd_AllowedToken_token_symbol   protoreflect.FieldDescriptor
+	fd_AllowedToken_token_address  protoreflect.FieldDescriptor
+)
+
+func init() {
+	file_yuuchain_vault_v1_params_proto_init()
+	md_AllowedToken = File_yuuchain_vault_v1_params_proto.Messages().ByName("AllowedToken")
+	fd_AllowedToken_source_network = md_AllowedToken.Fields().ByName("source_network")
+	fd_AllowedToken_token_symbol = md_AllowedToken.Fields().ByName("token_symbol")
+	fd_AllowedToken_token_address = md_AllowedToken.Fields().ByName("token_address")
+}
+
+var _ protoreflect.Message = (*fastReflection_AllowedToken)(nil)
+
+type fastReflection_AllowedToken AllowedToken
+
+func (x *AllowedToken) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_AllowedToken)(x)
+}
+
+func (x *AllowedToken) slowProtoReflect() protoreflect.Message {
+	mi := &file_yuuchain_vault_v1_params_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+var _fastReflection_AllowedToken_messageType fastReflection_AllowedToken_messageType
+var _ protoreflect.MessageType = fastReflection_AllowedToken_messageType{}
+
+type fastReflection_AllowedToken_messageType struct{}
+
+func (x fastReflection_AllowedToken_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_AllowedToken)(nil)
+}
+func (x fastReflection_AllowedToken_messageType) New() protoreflect.Message {
+	return new(fastReflection_AllowedToken)
+}
+func (x fastReflection_AllowedToken_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_AllowedToken
+}
+
+// Descriptor returns message descriptor, which contains only the protobuf
+// type information for the message.
+func (x *fastReflection_AllowedToken) Descriptor() protoreflect.MessageDescriptor {
+	return md_AllowedToken
+}
+
+// Type returns the message type, which encapsulates both Go and protobuf
+// type information. If the Go type information is not needed,
+// it is recommended that the message descriptor be used instead.
+func (x *fastReflection_AllowedToken) Type() protoreflect.MessageType {
+	return _fastReflection_AllowedToken_messageType
+}
+
+// New returns a newly allocated and mutable empty message.
+func (x *fastReflection_AllowedToken) New() protoreflect.Message {
+	return new(fastReflection_AllowedToken)
+}
+
+// Interface unwraps the message reflection interface and
+// returns the underlying ProtoMessage interface.
+func (x *fastReflection_AllowedToken) Interface() protoreflect.ProtoMessage {
+	return (*AllowedToken)(x)
+}
+
+// Range iterates over every populated field in an undefined order,
+// calling f for each field descriptor and value encountered.
+// Range returns immediately if f returns false.
+// While iterating, mutating operations may only be performed
+// on the current field descriptor.
+func (x *fastReflection_AllowedToken) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+	if x.SourceNetwork != "" {
+		value := protoreflect.ValueOfString(x.SourceNetwork)
+		if !f(fd_AllowedToken_source_network, value) {
+			return
+		}
+	}
+	if x.TokenSymbol != "" {
+		value := protoreflect.ValueOfString(x.TokenSymbol)
+		if !f(fd_AllowedToken_token_symbol, value) {
+			return
+		}
+	}
+	if x.TokenAddress != "" {
+		value := protoreflect.ValueOfString(x.TokenAddress)
+		if !f(fd_AllowedToken_token_address, value) {
+			return
+		}
+	}
+}
+
+// Has reports whether a field is populated.
+//
+// Some fields have the property of nullability where it is possible to
+// distinguish between the default value of a field and whether the field
+// was explicitly populated with the default value. Singular message fields,
+// member fields of a oneof, and proto2 scalar fields are nullable. Such
+// fields are populated only if explicitly set.
+//
+// In other cases (aside from the nullable cases above),
+// a proto3 scalar field is populated if it contains a non-zero value, and
+// a repeated field is populated if it is non-empty.
+func (x *fastReflection_AllowedToken) Has(fd protoreflect.FieldDescriptor) bool {
+	switch fd.FullName() {
+	case "yuuchain.vault.v1.AllowedToken.source_network":
+		return x.SourceNetwork != ""
+	case "yuuchain.vault.v1.AllowedToken.token_symbol":
+		return x.TokenSymbol != ""
+	case "yuuchain.vault.v1.AllowedToken.token_address":
+		return x.TokenAddress != ""
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: yuuchain.vault.v1.AllowedToken"))
+		}
+		panic(fmt.Errorf("message yuuchain.vault.v1.AllowedToken does not contain field %s", fd.FullName()))
+	}
+}
+
+// Clear clears the field such that a subsequent Has call reports false.
+//
+// Clearing an extension field clears both the extension type and value
+// associated with the given field number.
+//
+// Clear is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_AllowedToken) Clear(fd protoreflect.FieldDescriptor) {
+	switch fd.FullName() {
+	case "yuuchain.vault.v1.AllowedToken.source_network":
+		x.SourceNetwork = ""
+	case "yuuchain.vault.v1.AllowedToken.token_symbol":
+		x.TokenSymbol = ""
+	case "yuuchain.vault.v1.AllowedToken.token_address":
+		x.TokenAddress = ""
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: yuuchain.vault.v1.AllowedToken"))
+		}
+		panic(fmt.Errorf("message yuuchain.vault.v1.AllowedToken does not contain field %s", fd.FullName()))
+	}
+}
+
+// Get retrieves the value for a field.
+//
+// For unpopulated scalars, it returns the default value, where
+// the default value of a bytes scalar is guaranteed to be a copy.
+// For unpopulated composite types, it returns an empty, read-only view
+// of the value; to obtain a mutable reference, use Mutable.
+func (x *fastReflection_AllowedToken) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+	switch descriptor.FullName() {
+	case "yuuchain.vault.v1.AllowedToken.source_network":
+		value := x.SourceNetwork
+		return protoreflect.ValueOfString(value)
+	case "yuuchain.vault.v1.AllowedToken.token_symbol":
+		value := x.TokenSymbol
+		return protoreflect.ValueOfString(value)
+	case "yuuchain.vault.v1.AllowedToken.token_address":
+		value := x.TokenAddress
+		return protoreflect.ValueOfString(value)
+	default:
+		if descriptor.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: yuuchain.vault.v1.AllowedToken"))
+		}
+		panic(fmt.Errorf("message yuuchain.vault.v1.AllowedToken does not contain field %s", descriptor.FullName()))
+	}
+}
+
+// Set stores the value for a field.
+//
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType.
+// When setting a composite type, it is unspecified whether the stored value
+// aliases the source's memory in any way. If the composite value is an
+// empty, read-only value, then it panics.
+//
+// Set is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_AllowedToken) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+	switch fd.FullName() {
+	case "yuuchain.vault.v1.AllowedToken.source_network":
+		x.SourceNetwork = value.Interface().(string)
+	case "yuuchain.vault.v1.AllowedToken.token_symbol":
+		x.TokenSymbol = value.Interface().(string)
+	case "yuuchain.vault.v1.AllowedToken.token_address":
+		x.TokenAddress = value.Interface().(string)
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: yuuchain.vault.v1.AllowedToken"))
+		}
+		panic(fmt.Errorf("message yuuchain.vault.v1.AllowedToken does not contain field %s", fd.FullName()))
+	}
+}
+
+// Mutable returns a mutable reference to a composite type.
+//
+// If the field is unpopulated, it may allocate a composite value.
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType
+// if not already stored.
+// It panics if the field does not contain a composite type.
+//
+// Mutable is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_AllowedToken) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "yuuchain.vault.v1.AllowedToken.source_network":
+		panic(fmt.Errorf("field source_network of message yuuchain.vault.v1.AllowedToken is not mutable"))
+	case "yuuchain.vault.v1.AllowedToken.token_symbol":
+		panic(fmt.Errorf("field token_symbol of message yuuchain.vault.v1.AllowedToken is not mutable"))
+	case "yuuchain.vault.v1.AllowedToken.token_address":
+		panic(fmt.Errorf("field token_address of message yuuchain.vault.v1.AllowedToken is not mutable"))
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: yuuchain.vault.v1.AllowedToken"))
+		}
+		panic(fmt.Errorf("message yuuchain.vault.v1.AllowedToken does not contain field %s", fd.FullName()))
+	}
+}
+
+// NewField returns a new value that is assignable to the field
+// for the given descriptor. For scalars, this returns the default value.
+// For lists, maps, and messages, this returns a new, empty, mutable value.
+func (x *fastReflection_AllowedToken) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "yuuchain.vault.v1.AllowedToken.source_network":
+		return protoreflect.ValueOfString("")
+	case "yuuchain.vault.v1.AllowedToken.token_symbol":
+		return protoreflect.ValueOfString("")
+	case "yuuchain.vault.v1.AllowedToken.token_address":
+		return protoreflect.ValueOfString("")
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: yuuchain.vault.v1.AllowedToken"))
+		}
+		panic(fmt.Errorf("message yuuchain.vault.v1.AllowedToken does not contain field %s", fd.FullName()))
+	}
+}
+
+// WhichOneof reports which field within the oneof is populated,
+// returning nil if none are populated.
+// It panics if the oneof descriptor does not belong to this message.
+func (x *fastReflection_AllowedToken) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+	switch d.FullName() {
+	default:
+		panic(fmt.Errorf("%s is not a oneof field in yuuchain.vault.v1.AllowedToken", d.FullName()))
+	}
+	panic("unreachable")
+}
+
+// GetUnknown retrieves the entire list of unknown fields.
+// The caller may only mutate the contents of the RawFields
+// if the mutated bytes are stored back into the message with SetUnknown.
+func (x *fastReflection_AllowedToken) GetUnknown() protoreflect.RawFields {
+	return x.unknownFields
+}
+
+// SetUnknown stores an entire list of unknown fields.
+// The raw fields must be syntactically valid according to the wire format.
+// An implementation may panic if this is not the case.
+// Once stored, the caller must not mutate the content of the RawFields.
+// An empty RawFields may be passed to clear the fields.
+//
+// SetUnknown is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_AllowedToken) SetUnknown(fields protoreflect.RawFields) {
+	x.unknownFields = fields
+}
+
+// IsValid reports whether the message is valid.
+//
+// An invalid message is an empty, read-only value.
+//
+// An invalid message often corresponds to a nil pointer of the concrete
+// message type, but the details are implementation dependent.
+// Validity is not part of the protobuf data model, and may not
+// be preserved in marshaling or other operations.
+func (x *fastReflection_AllowedToken) IsValid() bool {
+	return x != nil
+}
+
+// ProtoMethods returns optional fastReflectionFeature-path implementations of various operations.
+// This method may return nil.
+//
+// The returned methods type is identical to
+// "google.golang.org/protobuf/runtime/protoiface".Methods.
+// Consult the protoiface package documentation for details.
+func (x *fastReflection_AllowedToken) ProtoMethods() *protoiface.Methods {
+	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
+		x := input.Message.Interface().(*AllowedToken)
+		if x == nil {
+			return protoiface.SizeOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Size:              0,
+			}
+		}
+		options := runtime.SizeInputToOptions(input)
+		_ = options
+		var n int
+		var l int
+		_ = l
+		l = len(x.SourceNetwork)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.TokenSymbol)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.TokenAddress)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		if x.unknownFields != nil {
+			n += len(x.unknownFields)
+		}
+		return protoiface.SizeOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Size:              n,
+		}
+	}
+
+	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
+		x := input.Message.Interface().(*AllowedToken)
+		if x == nil {
+			return protoiface.MarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Buf:               input.Buf,
+			}, nil
+		}
+		options := runtime.MarshalInputToOptions(input)
+		_ = options
+		size := options.Size(x)
+		dAtA := make([]byte, size)
+		i := len(dAtA)
+		_ = i
+		var l int
+		_ = l
+		if x.unknownFields != nil {
+			i -= len(x.unknownFields)
+			copy(dAtA[i:], x.unknownFields)
+		}
+		if len(x.TokenAddress) > 0 {
+			i -= len(x.TokenAddress)
+			copy(dAtA[i:], x.TokenAddress)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.TokenAddress)))
+			i--
+			dAtA[i] = 0x1a
+		}
+		if len(x.TokenSymbol) > 0 {
+			i -= len(x.TokenSymbol)
+			copy(dAtA[i:], x.TokenSymbol)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.TokenSymbol)))
+			i--
+			dAtA[i] = 0x12
+		}
+		if len(x.SourceNetwork) > 0 {
+			i -= len(x.SourceNetwork)
+			copy(dAtA[i:], x.SourceNetwork)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.SourceNetwork)))
+			i--
+			dAtA[i] = 0xa
+		}
+		if input.Buf != nil {
+			input.Buf = append(input.Buf, dAtA...)
+		} else {
+			input.Buf = dAtA
+		}
+		return protoiface.MarshalOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Buf:               input.Buf,
+		}, nil
+	}
+	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
+		x := input.Message.Interface().(*AllowedToken)
+		if x == nil {
+			return protoiface.UnmarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Flags:             input.Flags,
+			}, nil
+		}
+		options := runtime.UnmarshalInputToOptions(input)
+		_ = options
+		dAtA := input.Buf
+		l := len(dAtA)
+		iNdEx := 0
+		for iNdEx < l {
+			preIndex := iNdEx
+			var wire uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				wire |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			fieldNum := int32(wire >> 3)
+			wireType := int(wire & 0x7)
+			if wireType == 4 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: AllowedToken: wiretype end group for non-group")
+			}
+			if fieldNum <= 0 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: AllowedToken: illegal tag %d (wire type %d)", fieldNum, wire)
+			}
+			switch fieldNum {
+			case 1:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field SourceNetwork", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.SourceNetwork = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 2:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field TokenSymbol", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.TokenSymbol = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 3:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field TokenAddress", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.TokenAddress = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			default:
+				iNdEx = preIndex
+				skippy, err := runtime.Skip(dAtA[iNdEx:])
+				if err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				if (skippy < 0) || (iNdEx+skippy) < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if (iNdEx + skippy) > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if !options.DiscardUnknown {
+					x.unknownFields = append(x.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+				}
+				iNdEx += skippy
+			}
+		}
+
+		if iNdEx > l {
+			return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+		}
+		return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, nil
+	}
+	return &protoiface.Methods{
+		NoUnkeyedLiterals: struct{}{},
+		Flags:             protoiface.SupportMarshalDeterministic | protoiface.SupportUnmarshalDiscardUnknown,
+		Size:              size,
+		Marshal:           marshal,
+		Unmarshal:         unmarshal,
+		Merge:             nil,
+		CheckInitialized:  nil,
+	}
+}
+
+var _ protoreflect.List = (*_Params_1_list)(nil)
+
+type _Params_1_list struct {
+	list *[]string
+}
+
+func (x *_Params_1_list) Len() int {
+	if x.list == nil {
+		return 0
+	}
+	return len(*x.list)
+}
+
+func (x *_Params_1_list) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOfString((*x.list)[i])
+}
+
+func (x *_Params_1_list) Set(i int, value protoreflect.Value) {
+	valueUnwrapped := value.String()
+	concreteValue := valueUnwrapped
+	(*x.list)[i] = concreteValue
+}
+
+func (x *_Params_1_list) Append(value protoreflect.Value) {
+	valueUnwrapped := value.String()
+	concreteValue := valueUnwrapped
+	*x.list = append(*x.list, concreteValue)
+}
+
+func (x *_Params_1_list) AppendMutable() protoreflect.Value {
+	panic(fmt.Errorf("AppendMutable can not be called on message Params at list field AllowedSourceNetworks as it is not of Message kind"))
+}
+
+func (x *_Params_1_list) Truncate(n int) {
+	*x.list = (*x.list)[:n]
+}
+
+func (x *_Params_1_list) NewElement() protoreflect.Value {
+	v := ""
+	return protoreflect.ValueOfString(v)
+}
+
+func (x *_Params_1_list) IsValid() bool {
+	return x.list != nil
+}
+
+var _ protoreflect.List = (*_Params_2_list)(nil)
+
+type _Params_2_list struct {
+	list *[]*AllowedToken
+}
+
+func (x *_Params_2_list) Len() int {
+	if x.list == nil {
+		return 0
+	}
+	return len(*x.list)
+}
+
+func (x *_Params_2_list) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOfMessage((*x.list)[i].ProtoReflect())
+}
+
+func (x *_Params_2_list) Set(i int, value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*AllowedToken)
+	(*x.list)[i] = concreteValue
+}
+
+func (x *_Params_2_list) Append(value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*AllowedToken)
+	*x.list = append(*x.list, concreteValue)
+}
+
+func (x *_Params_2_list) AppendMutable() protoreflect.Value {
+	v := new(AllowedToken)
+	*x.list = append(*x.list, v)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_Params_2_list) Truncate(n int) {
+	for i := n; i < len(*x.list); i++ {
+		(*x.list)[i] = nil
+	}
+	*x.list = (*x.list)[:n]
+}
+
+func (x *_Params_2_list) NewElement() protoreflect.Value {
+	v := new(AllowedToken)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_Params_2_list) IsValid() bool {
+	return x.list != nil
+}
+
+var (
+	md_Params                         protoreflect.MessageDescriptor
+	fd_Params_allowed_source_networks protoreflect.FieldDescriptor
+	fd_Params_allowed_tokens          protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_yuuchain_vault_v1_params_proto_init()
 	md_Params = File_yuuchain_vault_v1_params_proto.Messages().ByName("Params")
+	fd_Params_allowed_source_networks = md_Params.Fields().ByName("allowed_source_networks")
+	fd_Params_allowed_tokens = md_Params.Fields().ByName("allowed_tokens")
 }
 
 var _ protoreflect.Message = (*fastReflection_Params)(nil)
@@ -30,7 +679,7 @@ func (x *Params) ProtoReflect() protoreflect.Message {
 }
 
 func (x *Params) slowProtoReflect() protoreflect.Message {
-	mi := &file_yuuchain_vault_v1_params_proto_msgTypes[0]
+	mi := &file_yuuchain_vault_v1_params_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -86,6 +735,18 @@ func (x *fastReflection_Params) Interface() protoreflect.ProtoMessage {
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
 func (x *fastReflection_Params) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+	if len(x.AllowedSourceNetworks) != 0 {
+		value := protoreflect.ValueOfList(&_Params_1_list{list: &x.AllowedSourceNetworks})
+		if !f(fd_Params_allowed_source_networks, value) {
+			return
+		}
+	}
+	if len(x.AllowedTokens) != 0 {
+		value := protoreflect.ValueOfList(&_Params_2_list{list: &x.AllowedTokens})
+		if !f(fd_Params_allowed_tokens, value) {
+			return
+		}
+	}
 }
 
 // Has reports whether a field is populated.
@@ -101,6 +762,10 @@ func (x *fastReflection_Params) Range(f func(protoreflect.FieldDescriptor, proto
 // a repeated field is populated if it is non-empty.
 func (x *fastReflection_Params) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
+	case "yuuchain.vault.v1.Params.allowed_source_networks":
+		return len(x.AllowedSourceNetworks) != 0
+	case "yuuchain.vault.v1.Params.allowed_tokens":
+		return len(x.AllowedTokens) != 0
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: yuuchain.vault.v1.Params"))
@@ -117,6 +782,10 @@ func (x *fastReflection_Params) Has(fd protoreflect.FieldDescriptor) bool {
 // Clear is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_Params) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
+	case "yuuchain.vault.v1.Params.allowed_source_networks":
+		x.AllowedSourceNetworks = nil
+	case "yuuchain.vault.v1.Params.allowed_tokens":
+		x.AllowedTokens = nil
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: yuuchain.vault.v1.Params"))
@@ -133,6 +802,18 @@ func (x *fastReflection_Params) Clear(fd protoreflect.FieldDescriptor) {
 // of the value; to obtain a mutable reference, use Mutable.
 func (x *fastReflection_Params) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
+	case "yuuchain.vault.v1.Params.allowed_source_networks":
+		if len(x.AllowedSourceNetworks) == 0 {
+			return protoreflect.ValueOfList(&_Params_1_list{})
+		}
+		listValue := &_Params_1_list{list: &x.AllowedSourceNetworks}
+		return protoreflect.ValueOfList(listValue)
+	case "yuuchain.vault.v1.Params.allowed_tokens":
+		if len(x.AllowedTokens) == 0 {
+			return protoreflect.ValueOfList(&_Params_2_list{})
+		}
+		listValue := &_Params_2_list{list: &x.AllowedTokens}
+		return protoreflect.ValueOfList(listValue)
 	default:
 		if descriptor.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: yuuchain.vault.v1.Params"))
@@ -153,6 +834,14 @@ func (x *fastReflection_Params) Get(descriptor protoreflect.FieldDescriptor) pro
 // Set is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_Params) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
+	case "yuuchain.vault.v1.Params.allowed_source_networks":
+		lv := value.List()
+		clv := lv.(*_Params_1_list)
+		x.AllowedSourceNetworks = *clv.list
+	case "yuuchain.vault.v1.Params.allowed_tokens":
+		lv := value.List()
+		clv := lv.(*_Params_2_list)
+		x.AllowedTokens = *clv.list
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: yuuchain.vault.v1.Params"))
@@ -173,6 +862,18 @@ func (x *fastReflection_Params) Set(fd protoreflect.FieldDescriptor, value proto
 // Mutable is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_Params) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
+	case "yuuchain.vault.v1.Params.allowed_source_networks":
+		if x.AllowedSourceNetworks == nil {
+			x.AllowedSourceNetworks = []string{}
+		}
+		value := &_Params_1_list{list: &x.AllowedSourceNetworks}
+		return protoreflect.ValueOfList(value)
+	case "yuuchain.vault.v1.Params.allowed_tokens":
+		if x.AllowedTokens == nil {
+			x.AllowedTokens = []*AllowedToken{}
+		}
+		value := &_Params_2_list{list: &x.AllowedTokens}
+		return protoreflect.ValueOfList(value)
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: yuuchain.vault.v1.Params"))
@@ -186,6 +887,12 @@ func (x *fastReflection_Params) Mutable(fd protoreflect.FieldDescriptor) protore
 // For lists, maps, and messages, this returns a new, empty, mutable value.
 func (x *fastReflection_Params) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
+	case "yuuchain.vault.v1.Params.allowed_source_networks":
+		list := []string{}
+		return protoreflect.ValueOfList(&_Params_1_list{list: &list})
+	case "yuuchain.vault.v1.Params.allowed_tokens":
+		list := []*AllowedToken{}
+		return protoreflect.ValueOfList(&_Params_2_list{list: &list})
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: yuuchain.vault.v1.Params"))
@@ -255,6 +962,18 @@ func (x *fastReflection_Params) ProtoMethods() *protoiface.Methods {
 		var n int
 		var l int
 		_ = l
+		if len(x.AllowedSourceNetworks) > 0 {
+			for _, s := range x.AllowedSourceNetworks {
+				l = len(s)
+				n += 1 + l + runtime.Sov(uint64(l))
+			}
+		}
+		if len(x.AllowedTokens) > 0 {
+			for _, e := range x.AllowedTokens {
+				l = options.Size(e)
+				n += 1 + l + runtime.Sov(uint64(l))
+			}
+		}
 		if x.unknownFields != nil {
 			n += len(x.unknownFields)
 		}
@@ -283,6 +1002,31 @@ func (x *fastReflection_Params) ProtoMethods() *protoiface.Methods {
 		if x.unknownFields != nil {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
+		}
+		if len(x.AllowedTokens) > 0 {
+			for iNdEx := len(x.AllowedTokens) - 1; iNdEx >= 0; iNdEx-- {
+				encoded, err := options.Marshal(x.AllowedTokens[iNdEx])
+				if err != nil {
+					return protoiface.MarshalOutput{
+						NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+						Buf:               input.Buf,
+					}, err
+				}
+				i -= len(encoded)
+				copy(dAtA[i:], encoded)
+				i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
+				i--
+				dAtA[i] = 0x12
+			}
+		}
+		if len(x.AllowedSourceNetworks) > 0 {
+			for iNdEx := len(x.AllowedSourceNetworks) - 1; iNdEx >= 0; iNdEx-- {
+				i -= len(x.AllowedSourceNetworks[iNdEx])
+				copy(dAtA[i:], x.AllowedSourceNetworks[iNdEx])
+				i = runtime.EncodeVarint(dAtA, i, uint64(len(x.AllowedSourceNetworks[iNdEx])))
+				i--
+				dAtA[i] = 0xa
+			}
 		}
 		if input.Buf != nil {
 			input.Buf = append(input.Buf, dAtA...)
@@ -333,6 +1077,72 @@ func (x *fastReflection_Params) ProtoMethods() *protoiface.Methods {
 				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: Params: illegal tag %d (wire type %d)", fieldNum, wire)
 			}
 			switch fieldNum {
+			case 1:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field AllowedSourceNetworks", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.AllowedSourceNetworks = append(x.AllowedSourceNetworks, string(dAtA[iNdEx:postIndex]))
+				iNdEx = postIndex
+			case 2:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field AllowedTokens", wireType)
+				}
+				var msglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					msglen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.AllowedTokens = append(x.AllowedTokens, &AllowedToken{})
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.AllowedTokens[len(x.AllowedTokens)-1]); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
 			default:
 				iNdEx = preIndex
 				skippy, err := runtime.Skip(dAtA[iNdEx:])
@@ -381,17 +1191,87 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Keep Params simple for now; this matches your existing Go-generated struct.
+// One supported stablecoin token on one supported source network.
+// Example:
+//
+//	source_network: "ethereum"
+//	token_symbol:   "USDT"
+//	token_address:  "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+type AllowedToken struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Source chain/network identifier. Keep it consistent with MsgMintFromBridge.source_network.
+	SourceNetwork string `protobuf:"bytes,1,opt,name=source_network,json=sourceNetwork,proto3" json:"source_network,omitempty"`
+	// "USDT" or "USDC" (uppercase recommended).
+	TokenSymbol string `protobuf:"bytes,2,opt,name=token_symbol,json=tokenSymbol,proto3" json:"token_symbol,omitempty"`
+	// Token contract address on the source chain (hex for EVM; base58 for Tron if you later choose to support it).
+	TokenAddress string `protobuf:"bytes,3,opt,name=token_address,json=tokenAddress,proto3" json:"token_address,omitempty"`
+}
+
+func (x *AllowedToken) Reset() {
+	*x = AllowedToken{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_yuuchain_vault_v1_params_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AllowedToken) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AllowedToken) ProtoMessage() {}
+
+// Deprecated: Use AllowedToken.ProtoReflect.Descriptor instead.
+func (*AllowedToken) Descriptor() ([]byte, []int) {
+	return file_yuuchain_vault_v1_params_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *AllowedToken) GetSourceNetwork() string {
+	if x != nil {
+		return x.SourceNetwork
+	}
+	return ""
+}
+
+func (x *AllowedToken) GetTokenSymbol() string {
+	if x != nil {
+		return x.TokenSymbol
+	}
+	return ""
+}
+
+func (x *AllowedToken) GetTokenAddress() string {
+	if x != nil {
+		return x.TokenAddress
+	}
+	return ""
+}
+
+// Vault module params (Option B: on-chain config).
 type Params struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+
+	// If empty: treat as "allow all networks" (backwards-compatible default).
+	// Vault module params (Option B: on-chain config).
+	// If non-empty: MintFromBridge must require msg.source_network to be in this list.
+	//
+	// Examples: "ethereum", "sepolia", "arbitrum", "polygon", "bsc"
+	AllowedSourceNetworks []string `protobuf:"bytes,1,rep,name=allowed_source_networks,json=allowedSourceNetworks,proto3" json:"allowed_source_networks,omitempty"`
+	// Exact stablecoin allowlist per network (USDT/USDC contracts).
+	// If empty: no token-level restrictions are enforced yet (we will enforce in the next step).
+	AllowedTokens []*AllowedToken `protobuf:"bytes,2,rep,name=allowed_tokens,json=allowedTokens,proto3" json:"allowed_tokens,omitempty"`
 }
 
 func (x *Params) Reset() {
 	*x = Params{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_yuuchain_vault_v1_params_proto_msgTypes[0]
+		mi := &file_yuuchain_vault_v1_params_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -405,7 +1285,21 @@ func (*Params) ProtoMessage() {}
 
 // Deprecated: Use Params.ProtoReflect.Descriptor instead.
 func (*Params) Descriptor() ([]byte, []int) {
-	return file_yuuchain_vault_v1_params_proto_rawDescGZIP(), []int{0}
+	return file_yuuchain_vault_v1_params_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Params) GetAllowedSourceNetworks() []string {
+	if x != nil {
+		return x.AllowedSourceNetworks
+	}
+	return nil
+}
+
+func (x *Params) GetAllowedTokens() []*AllowedToken {
+	if x != nil {
+		return x.AllowedTokens
+	}
+	return nil
 }
 
 var File_yuuchain_vault_v1_params_proto protoreflect.FileDescriptor
@@ -414,7 +1308,23 @@ var file_yuuchain_vault_v1_params_proto_rawDesc = []byte{
 	0x0a, 0x1e, 0x79, 0x75, 0x75, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74,
 	0x2f, 0x76, 0x31, 0x2f, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
 	0x12, 0x11, 0x79, 0x75, 0x75, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74,
-	0x2e, 0x76, 0x31, 0x22, 0x08, 0x0a, 0x06, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x42, 0xb6, 0x01,
+	0x2e, 0x76, 0x31, 0x22, 0x7d, 0x0a, 0x0c, 0x41, 0x6c, 0x6c, 0x6f, 0x77, 0x65, 0x64, 0x54, 0x6f,
+	0x6b, 0x65, 0x6e, 0x12, 0x25, 0x0a, 0x0e, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x5f, 0x6e, 0x65,
+	0x74, 0x77, 0x6f, 0x72, 0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x73, 0x6f, 0x75,
+	0x72, 0x63, 0x65, 0x4e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b, 0x12, 0x21, 0x0a, 0x0c, 0x74, 0x6f,
+	0x6b, 0x65, 0x6e, 0x5f, 0x73, 0x79, 0x6d, 0x62, 0x6f, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x0b, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x53, 0x79, 0x6d, 0x62, 0x6f, 0x6c, 0x12, 0x23, 0x0a,
+	0x0d, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x5f, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x41, 0x64, 0x64, 0x72, 0x65,
+	0x73, 0x73, 0x22, 0x88, 0x01, 0x0a, 0x06, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x12, 0x36, 0x0a,
+	0x17, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x65, 0x64, 0x5f, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x5f,
+	0x6e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x52, 0x15,
+	0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x65, 0x64, 0x53, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x4e, 0x65, 0x74,
+	0x77, 0x6f, 0x72, 0x6b, 0x73, 0x12, 0x46, 0x0a, 0x0e, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x65, 0x64,
+	0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1f, 0x2e,
+	0x79, 0x75, 0x75, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x2e, 0x76,
+	0x31, 0x2e, 0x41, 0x6c, 0x6c, 0x6f, 0x77, 0x65, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x0d,
+	0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x65, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x73, 0x42, 0xb6, 0x01,
 	0x0a, 0x15, 0x63, 0x6f, 0x6d, 0x2e, 0x79, 0x75, 0x75, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x2e, 0x76,
 	0x61, 0x75, 0x6c, 0x74, 0x2e, 0x76, 0x31, 0x42, 0x0b, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x50,
 	0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x2a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64,
@@ -441,16 +1351,18 @@ func file_yuuchain_vault_v1_params_proto_rawDescGZIP() []byte {
 	return file_yuuchain_vault_v1_params_proto_rawDescData
 }
 
-var file_yuuchain_vault_v1_params_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_yuuchain_vault_v1_params_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_yuuchain_vault_v1_params_proto_goTypes = []interface{}{
-	(*Params)(nil), // 0: yuuchain.vault.v1.Params
+	(*AllowedToken)(nil), // 0: yuuchain.vault.v1.AllowedToken
+	(*Params)(nil),       // 1: yuuchain.vault.v1.Params
 }
 var file_yuuchain_vault_v1_params_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: yuuchain.vault.v1.Params.allowed_tokens:type_name -> yuuchain.vault.v1.AllowedToken
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_yuuchain_vault_v1_params_proto_init() }
@@ -460,6 +1372,18 @@ func file_yuuchain_vault_v1_params_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_yuuchain_vault_v1_params_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AllowedToken); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_yuuchain_vault_v1_params_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Params); i {
 			case 0:
 				return &v.state
@@ -478,7 +1402,7 @@ func file_yuuchain_vault_v1_params_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_yuuchain_vault_v1_params_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
