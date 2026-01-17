@@ -22,8 +22,9 @@ func GetTxCmd() *cobra.Command {
 
 	// Add tx subcommands that exist.
 	cmd.AddCommand(
-		GetCmdDeposit(),      // from tx_deposit.go (already in your folder)
-		CmdMintFromBridge(),  // from tx_mint_from_bridge.go
+		GetCmdDeposit(),     // from tx_deposit.go (already in your folder)
+		CmdMintFromBridge(), // from tx_mint_from_bridge.go
+		CmdUpdateParams(),   // NEW: from tx_update_params.go
 	)
 
 	flags.AddTxFlagsToCmd(cmd)
