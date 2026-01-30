@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package yuuchain.vault.v1;
-
-option go_package = "github.com/evmos/evmos/v20/x/vault/types";
-
-// Keep Params simple for now; this matches your existing Go-generated struct.
-message Params {
-}
