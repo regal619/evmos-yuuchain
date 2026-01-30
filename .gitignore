@@ -94,3 +94,14 @@ keplr-support/_backup/
 
 evmosd
 /build/evmosd
+
+# ---- YuuChain local secrets / do not commit ----
+configs/bridge.ethereum-mainnet.json
+configs/bridge.tron-mainnet.json
+configs/bridge.sepolia.json
+scripts/.env
+.venv/
+
+# backups / scratch
+*.bak*
+*.tabsfixed

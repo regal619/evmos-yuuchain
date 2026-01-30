@@ -458,14 +458,18 @@ def watch_tron(cfg, recipient_evmos: str, source_name: str = "tron", confirmatio
                 # deterministic idempotency key
                 source_id = txid
 
-                # default recipient is the CLI arg; prefer recipient encoded in TRON vault tx calldata
-                mint_to = recipient_evmos
+                # TRON deposits MUST carry the recipient in the escrow tx calldata.
+                # Never fallback to the CLI arg (prevents silent wrong mints).
+                mint_to = None
                 try:
-                    r = _tron_tx_recipient_evmos(trongrid, headers, txid)
-                    if r:
-                        mint_to = r
-                except Exception:
-                    pass
+                    mint_to = _tron_tx_recipient_evmos(trongrid, headers, txid)
+                except Exception as e:
+                    print(f"[WARN] Could not decode recipient from TRON tx {txid}: {e}")
+
+                if not mint_to:
+                    print(f"[SKIP] TRON tx {txid} has no decodable recipient; not minting.")
+                    last_ts = max(last_ts, ts_ms + 1)
+                    continue
 
                 if source_id in processed_set:
                     # already minted
@@ -485,43 +489,52 @@ def watch_tron(cfg, recipient_evmos: str, source_name: str = "tron", confirmatio
                 if os.getenv("YUU_WATCH_ONLY", "").lower() in ("1", "true", "yes"):
                     print("[WATCH_ONLY] skipping mint tx broadcast")
                 else:
-                    cmd = [
-                        "./build/evmosd",
-                        "tx",
-                        "vault",
-                        "mint-from-bridge",
-                        "--chain-id",
-                        cfg["yuuchain"]["chain_id"],
-                        "--home",
-                        os.path.expanduser("~/.evmosd"),
-                        "--keyring-backend",
-                        "os",
-                        "--from",
-                        "bridge-operator",
-                        "--recipient",
-                        mint_to,
-                        "--amount-uyuu",
-                        str(uyuu),
-                        "--source-network",
-                        "tron",
-                        "--source-tx-hash",
-                        source_id,
-                        "--source-amount-uusdt",
-                        str(uusdt_units),
-                        "--token-symbol",
-                        token_symbol,
-                        "--token-address",
-                        usdt_contract,
-                        "--fees",
-                        "10000000000000000uyuu",
-                        "--gas",
-                        "200000",
-                        "-y",
-                        "-o",
-                        "json",
-                    ]
-                    out = subprocess.check_output(cmd, text=True, stderr=subprocess.STDOUT)
-                    print(out.strip())
+                      # Feed keyring passphrase to evmosd (non-interactive for systemd)
+                      passphrase = os.getenv("YUU_KEYRING_PASS", "")
+                      stdin_data = (passphrase + "\n") if passphrase else None
+
+                      cmd = [
+                          "./build/evmosd",
+                          "tx",
+                          "vault",
+                          "mint-from-bridge",
+                          "--chain-id",
+                          cfg["yuuchain"]["chain_id"],
+                          "--home",
+                          os.path.expanduser("~/.evmosd"),
+                          "--keyring-backend",
+                          "os",
+                          "--from",
+                          "bridge-operator",
+                          "--recipient",
+                          mint_to,
+                          "--amount-uyuu",
+                          str(uyuu),
+                          "--source-network",
+                          "tron",
+                          "--source-tx-hash",
+                          source_id,
+                          "--source-amount-uusdt",
+                          str(uusdt_units),
+                          "--token-symbol",
+                          token_symbol,
+                          "--token-address",
+                          usdt_contract,
+                          "--fees",
+                          "10000000000000000uyuu",
+                          "--gas",
+                          "200000",
+                          "-y",
+                          "-o",
+                          "json",
+                      ]
+                      out = subprocess.check_output(
+                          cmd,
+                          input=stdin_data,
+                          text=True,
+                          stderr=subprocess.STDOUT,
+                      )
+                      print(out.strip())
 
                 # mark processed + persist
                 processed_set.add(source_id)

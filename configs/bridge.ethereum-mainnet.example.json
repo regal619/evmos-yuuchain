@@ -1,0 +1,23 @@
+{
+  "yuuchain": {
+    "chain_id": "yuuchain_19001-1",
+    "rpc": "http://localhost:26657"
+  },
+  "sources": [
+    {
+      "name": "ethereum",
+      "evm_chain_id": 1,
+      "rpc": "https://mainnet.infura.io/v3/<API_KEY>",
+      "token": {
+        "symbol": "USDT",
+        "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        "decimals": 6
+      },
+      "escrow": {
+        "address": "0xbc3CB1f0c7DffA634ECf99976132fEF5fc6BaF5D",
+        "kind": "ERC20"
+      },
+      "min_confirmations": 12
+    }
+  ]
+}

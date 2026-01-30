@@ -565,6 +565,10 @@ def watch(cfg, recipient, source_name=None, confirmations=3, poll_sec=10):
                 token_address = src.get("token", {}).get("address", "")
                 source_amount_uusdt = str(uusdt_units)
 
+                # Feed keyring passphrase to evmosd (non-interactive for systemd)
+                passphrase = os.getenv("YUU_KEYRING_PASS", "")
+                stdin_data = (passphrase + "\n") if passphrase else None
+
                 subprocess.run(
                     [
                         "./build/evmosd",
@@ -602,6 +606,8 @@ def watch(cfg, recipient, source_name=None, confirmations=3, poll_sec=10):
                         "json",
                     ],
                     check=True,
+                    input=stdin_data,
+                    text=True,
                 )
 
             # advance watermark and persist

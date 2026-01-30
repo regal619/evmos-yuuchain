@@ -1,0 +1,25 @@
+{
+  "yuuchain": {
+    "chain_id": "yuuchain_19001-1",
+    "rpc": "http://localhost:26657"
+  },
+  "sources": [
+    {
+      "name": "tron",
+      "tron_chain": "mainnet",
+      "trongrid": "https://api.trongrid.io",
+      "trongrid_api_key": "<API_KEY>",
+      "token": {
+        "symbol": "USDT",
+        "address": "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",
+        "decimals": 6
+      },
+      "escrow": {
+        "address": "TBsNZt6wqSeFC1v6BMk8Xsvi6L6NKJY5x9",
+        "kind": "TRC20_VAULT_CONTRACT",
+        "event_name": "Deposit"
+      },
+      "min_confirmations": 20
+    }
+  ]
+}
