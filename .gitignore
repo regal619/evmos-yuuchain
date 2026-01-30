@@ -110,3 +110,13 @@ scripts/.env
 configs/bridge.tron-mainnet.json
 configs/bridge.sepolia.json
 configs/bridge.ethereum-mainnet.json
+
+# ---- YuuChain local secrets / do not commit ----
+yuu-home/
+*/.ldb
+*/.sst
+*/.log
+**/LOCK
+**/CURRENT
+*/MANIFEST-
+*/.wal
