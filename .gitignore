@@ -105,3 +105,8 @@ scripts/.env
 # backups / scratch
 *.bak*
 *.tabsfixed
+
+# real secrets (do not commit)
+configs/bridge.tron-mainnet.json
+configs/bridge.sepolia.json
+configs/bridge.ethereum-mainnet.json
